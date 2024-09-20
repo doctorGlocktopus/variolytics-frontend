@@ -1,0 +1,38 @@
+{
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tinymce/tinymce-react": "^4.2.0",
+    "cookies-next": "^2.1.1",
+    "date-fns": "^2.29.3",
+    "gh-pages": "^4.0.0",
+    "jose": "^4.11.0",
+    "next": "12.3.1",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-iframe": "^1.8.5",
+    "react-spotify-player": "^1.0.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "babel-loader": "^8.3.0",
+    "eslint": "^8.27.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-ape": "^1.0.8",
+    "eslint-config-next": "12.3.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "msw": "^0.48.2",
+    "netlify-cli": "^12.0.11"
+  }
+}
