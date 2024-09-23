@@ -12,8 +12,13 @@ Eine einfache Benutzerverwaltungs-App, die es ermöglicht, Benutzer zu registrie
 1. **Repository klonen**:
 
    ```bash
-   git clone https://github.com/dein-benutzername/dein-projekt.git
-   cd dein-projekt
+   git clone https://github.com/doctorGlocktopus/variolytics-frontend.git
+   cd variolytics-frontend
+   npm i / yarn install
+
+2. **Mock Daten generieren**:
+    
+    node scripts/generateMockData.js
 
 ## Routenbeschreibung
 
