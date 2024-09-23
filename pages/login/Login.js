@@ -28,6 +28,7 @@ export function Login() {
             return response.json();
         }).then((actualData) => {
             if (actualData?.user?.username) {
+                console.log(222, actualData)
                 setCookie('auth', actualData.accessToken);
                 setCurrentUser(actualData.user);
                 setError(null);
