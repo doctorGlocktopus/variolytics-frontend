@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 /data/user.json
+/data/mockData.json
 
 # testing
 /coverage
