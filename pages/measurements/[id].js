@@ -3,9 +3,11 @@ import AppContext from "../../AppContext";
 import { useContext } from "react";
 import { getCookie } from 'cookies-next';
 import { getColor } from '../../utils/utils.js';
+import { useDispatch } from 'react-redux';
 
 function DeviceDetails({ device }) {
     const { currentUser } = useContext(AppContext);     
+
 
     if (device?.MeasureId) {
         return (
@@ -81,7 +83,14 @@ function delMeasure(MeasureId) {
             auth: jwt,
             'Content-type': 'application/json; charset=UTF-8',
         },
-    }).then(() => window.location.reload(false));
+      }).then(() => {
+        const newNotification = {
+            id: Date.now(),
+            message: `Die Messung ${MeasureId} wurde entfernt!`,
+        };
+        dispatch(addNotification(newNotification));
+        window.location.reload(false)
+    });
 }
 
 export default DeviceDetails;

@@ -9,7 +9,6 @@ export default function Register() {
     const email = useRef(null);
     const password = useRef(null);
     const passwordTypo = useRef(null);
-    const [error, setError] = useState('');
 
     async function register(event) {
         event.preventDefault();
@@ -33,7 +32,6 @@ export default function Register() {
                     }
 
                     const data = await res.json();
-                    setError(data.message);
 
                     const newNotification = {
                         id: Date.now(),
@@ -42,7 +40,6 @@ export default function Register() {
                     dispatch(addNotification(newNotification));
 
                 } catch (err) {
-                    setError(err.message);
                     const newNotification = {
                         id: Date.now(),
                         message: `Registrierung fehlgeschlagen: ${err.message}`,
@@ -69,7 +66,6 @@ export default function Register() {
 
     return (
         <nav>
-            {error && <div className={styles.error}>{error}</div>}
             <div>
                 <h1>Registrieren</h1>
                 <form onSubmit={register}>

@@ -5,10 +5,6 @@ import styles from "../styles/Blog.module.css";
 
 export default function Navbar() {
 
-    const [posts, setPosts] = useState(null);
-    const [error, setError] = useState(null);
-    const [newPosts, setNewPosts] = useState(null);
-
     const {
         currentUser,
         setCurrentUser,

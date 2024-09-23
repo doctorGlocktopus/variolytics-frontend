@@ -1,5 +1,4 @@
 import {
-    useState,
     useRef,
     useContext,
 } from 'react';
@@ -14,7 +13,6 @@ export function Login() {
     const dispatch = useDispatch();
     const username = useRef(null);
     const password = useRef(null);
-    const [error, setError] = useState('');
     const { currentUser, setCurrentUser } = useContext(AppContext);
 
     const login = async () => {
@@ -38,7 +36,6 @@ export function Login() {
             if (actualData?.user?.username) {
                 setCookie('auth', actualData.accessToken);
                 setCurrentUser(actualData.user);
-                setError(null);
                 localStorage.setItem("user", JSON.stringify(actualData.user));
                 Router.push("/");
 
@@ -52,7 +49,7 @@ export function Login() {
                 setError("Benutzername oder Passwort stimmen nicht");
             }
         } catch (err) {
-            setError("Es gab ein Problem bei der Anfrage: " + err.message);
+            dispatch(addNotification(err));
         }
     };
 
