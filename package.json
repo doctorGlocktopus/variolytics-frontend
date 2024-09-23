@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
     "@tinymce/tinymce-react": "^4.2.0",
     "cookies-next": "^2.1.2",
     "date-fns": "^2.29.3",
@@ -19,7 +20,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-iframe": "^1.8.5",
-    "react-spotify-player": "^1.0.4"
+    "react-redux": "^9.1.2",
+    "react-spotify-player": "^1.0.4",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",

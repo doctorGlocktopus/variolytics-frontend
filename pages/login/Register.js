@@ -1,14 +1,17 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import styles from '../../styles/Home.module.css';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../redux/notificationSlice';
 
 export default function Register() {
+    const dispatch = useDispatch();
     const username = useRef(null);
     const email = useRef(null);
     const password = useRef(null);
     const passwordTypo = useRef(null);
     const [error, setError] = useState('');
 
-    async function handleSubmit(event) {
+    async function register(event) {
         event.preventDefault();
 
         if (password.current.value.length >= 5) {
@@ -22,7 +25,7 @@ export default function Register() {
                             email: email.current.value,
                             admin: false,
                         }),
-                        headers: {'Content-type': 'application/json; charset=UTF-8'},
+                        headers: { 'Content-type': 'application/json; charset=UTF-8' },
                     });
 
                     if (!res.ok) {
@@ -31,23 +34,45 @@ export default function Register() {
 
                     const data = await res.json();
                     setError(data.message);
+
+                    const newNotification = {
+                        id: Date.now(),
+                        message: `Der Benutzer ${username.current.value} wurde regestriert!`,
+                    };
+                    dispatch(addNotification(newNotification));
+
                 } catch (err) {
                     setError(err.message);
+                    const newNotification = {
+                        id: Date.now(),
+                        message: `Registrierung fehlgeschlagen: ${err.message}`,
+                    };
+                    dispatch(addNotification(newNotification));
                 }
             } else {
                 setError('Die Passwörter stimmen nicht überein');
+                const newNotification = {
+                    id: Date.now(),
+                    message: 'Die Passwörter stimmen nicht überein.',
+                };
+                dispatch(addNotification(newNotification));
             }
         } else {
             setError('Das Passwort muss mindestens 5 Zeichen lang sein');
+            const newNotification = {
+                id: Date.now(),
+                message: 'Das Passwort muss mindestens 5 Zeichen lang sein.',
+            };
+            dispatch(addNotification(newNotification));
         }
     }
 
     return (
         <nav>
-            {error}
+            {error && <div className={styles.error}>{error}</div>}
             <div>
-                <h1>Register</h1>
-                <form onSubmit={handleSubmit}>
+                <h1>Registrieren</h1>
+                <form onSubmit={register}>
                     <label className={styles.flexRunter}>Benutzername:
                         <input ref={username} required />
                     </label>
