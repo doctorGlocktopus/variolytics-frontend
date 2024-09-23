@@ -1,4 +1,4 @@
-import styles from '../../styles/Blog.module.css';
+import styles from '../../styles/Device.module.css';
 import { useRouter } from 'next/router';
 import AppContext from "../../AppContext";
 import { setCookie, getCookie } from 'cookies-next';
