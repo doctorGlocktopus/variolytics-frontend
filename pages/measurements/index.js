@@ -5,7 +5,6 @@ import { setCookie, getCookie } from 'cookies-next';
 import { useContext, useEffect, useState } from "react";
 import { getColor } from '../../utils/utils.js';
 
-
 function delMeasure(MeasureId) {
     let jwt = getCookie("auth");
     let urlID = `/api/measurements/${MeasureId}`;
@@ -28,17 +27,26 @@ function ListPageComponent() {
     const limit = 5;
     const page = parseInt(pageQuery) || 1;
     const [searchTerm, setSearchTerm] = useState('');
+    const [sortColumn, setSortColumn] = useState('MeasureId');
+    const [sortDirection, setSortDirection] = useState('asc');
 
     useEffect(() => {
         const fetchDevices = async () => {
-            const response = await fetch(`/api/measurements?page=${page}&limit=${limit}`);
+            const response = await fetch(`/api/measurements?page=${page}&limit=${limit}&sortBy=${sortColumn}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`);
             const data = await response.json();
             setDevices(data.devices);
             setTotalDevices(data.total);
         };
     
         fetchDevices();
-    }, [page, searchTerm]);
+    }, [page, sortColumn, sortDirection, searchTerm]);
+
+    const sortDevices = (column) => {
+        const direction = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';
+        setSortColumn(column);
+        setSortDirection(direction);
+        router.push(`/measurements?page=1&sortBy=${column}&sortDirection=${direction}&searchTerm=${searchTerm}`);
+    };
 
     const handleMeasureClick = (MeasureId) => {
         router.push(`/measurements/${MeasureId}`);
@@ -48,13 +56,12 @@ function ListPageComponent() {
 
     const changePage = (newPage) => {
         if (newPage < 1 || newPage > totalPages) return; 
-        router.push(`/measurements?page=${newPage}`);
+        router.push(`/measurements?page=${newPage}&sortBy=${sortColumn}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`);
     };
-
 
     return (
         <div className={styles.tableContainer}>
-            <h2>Geräteliste</h2>
+            <h2>Messungen</h2>
             <input 
                 type="text" 
                 placeholder="Suche..." 
@@ -70,17 +77,17 @@ function ListPageComponent() {
             <table className={styles.table}>
                 <thead>
                     <tr>
-                        <th>Messungs ID</th>
-                        <th>Gerät ID</th>
-                        <th>Gerätename</th>
-                        <th>N2O (ppm)</th>
-                        <th>CH4 (ppm)</th>
-                        <th>CO2 (Vol.%))</th>
-                        <th>O2 (Vol.%))</th>
-                        <th>Durchflussrate (m³/h)</th>
-                        <th>Temperatur (°C)</th>
-                        <th>Datum</th>
-                        <th>Status</th>
+                        <th onClick={() => sortDevices('MeasureId')}>Messungs ID</th>
+                        <th onClick={() => sortDevices('DeviceId')}>Geräte ID</th>
+                        <th onClick={() => sortDevices('DeviceName')}>Gerätename</th>
+                        <th onClick={() => sortDevices('N2O')}>N2O (ppm)</th>
+                        <th onClick={() => sortDevices('CH4')}>CH4 (ppm)</th>
+                        <th onClick={() => sortDevices('CO2')}>CO2 (Vol.%))</th>
+                        <th onClick={() => sortDevices('O2')}>O2 (Vol.%))</th>
+                        <th onClick={() => sortDevices('FlowRate')}>Durchflussrate (m³/h)</th>
+                        <th onClick={() => sortDevices('Temperature')}>Temperatur (°C)</th>
+                        <th onClick={() => sortDevices('Date')}>Datum</th>
+                        <th onClick={() => sortDevices('IsActive')}>Status</th>
                         {currentUser?.admin && <th>Aktionen</th>}
                     </tr>
                 </thead>

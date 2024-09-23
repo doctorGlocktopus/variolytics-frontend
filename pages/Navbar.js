@@ -28,6 +28,7 @@ export default function Navbar() {
                 <a href="/">Home</a>
                 <a href="/users">Benutzer</a>
                 <a href="/measurements">Messungen</a>
+                <a href="/devices">Geräte</a>
                 {currentUser ? <a href="#" onClick={() => logout()}>Logout</a> : <a href="/login">Login</a>}
             </div>
         </header>

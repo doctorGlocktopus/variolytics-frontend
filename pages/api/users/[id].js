@@ -1,46 +1,21 @@
 import fs from 'fs';
 import path from 'path';
-import styles from '../../styles/Blog.module.css';
 
-export default function UserPage({ user }) {
-    return (
-        <div className={styles.main}>
-            <div className={styles.post}>
-                <div className={styles.article}>
-                    <h2>Benutzer Nr. {user._id}</h2>
-                    <h3>Name: {user.username}</h3>
-                    <h3>Rolle: {user.admin ? "Admin" : "User"}</h3>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export async function getServerSideProps(ctx) {
-    const { id } = ctx.params;
-
+export default function handler(req, res) {
     const filePath = path.join(process.cwd(), 'data', 'users.json');
-    
-    try {
-        const fileData = fs.readFileSync(filePath, 'utf8');
-        const users = JSON.parse(fileData);
+    const fileData = fs.readFileSync(filePath);
+    const users = JSON.parse(fileData);
+console.log(11111111111)
+    if (req.method === 'DELETE') {
+        const { id } = req.query;
 
-        const user = users.find(user => user._id === id);
+        const updatedUsers = users.filter(user => String(user.id) !== String(id));
 
-        if (!user) {
-            return {
-                notFound: true,
-            };
-        }
 
-        return {
-            props: { user },
-        };
-    } catch (error) {
-        console.error("Error reading users.json:", error);
-        return {
-            notFound: true,
-        };
+        fs.writeFileSync(filePath, JSON.stringify(updatedUsers, null, 2));
+
+        return res.status(204).send();
     }
-}
 
+    res.status(200).json(users);
+}

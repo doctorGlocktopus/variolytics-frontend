@@ -43,4 +43,19 @@
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
+    
+ }
+ .table th {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f2f2f2;
+  transition: background-color 0.3s;
+}
+
+.table th:hover {
+  background-color: #e0e0e0;
+}
+
+.table th:hover {
+  color: #0070f3;
 }

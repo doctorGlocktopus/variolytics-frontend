@@ -5,5 +5,12 @@
     "email": "naja@anche.no",
     "password": "12345",
     "admin": true
+  },
+  {
+    "_id": "172682892838111",
+    "username": "123452",
+    "email": "naja@anche.no",
+    "password": "12345",
+    "admin": true
   }
 ]
