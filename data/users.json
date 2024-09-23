@@ -4,6 +4,6 @@
     "username": "12345",
     "email": "naja@anche.no",
     "password": "12345",
-    "admin": false
+    "admin": true
   }
 ]

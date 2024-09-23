@@ -1,0 +1,39 @@
+.deviceTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .deviceTable th, .deviceTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .deviceTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .deviceTable td {
+    font-size: 16px;
+  }
+  
+  .deviceTable td[style] {
+    font-weight: bold;
+  }
+  
+  /* Styles für den Button mit einer Klasse */
+  .deleteButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .deleteButton:hover {
+    background-color: #ff3333;
+  }
+  
