@@ -15,14 +15,20 @@ export async function middleware(request) {
             }
 
             const { payload } = await jose.jwtVerify(jwt, new TextEncoder().encode(secretKey));
-            
+
             if (payload && payload._id) {
                 return NextResponse.next();
+            } else {
+                throw new Error("Invalid JWT payload: Missing _id");
             }
         } catch (error) {
             console.error("JWT Verification Error: ", error);
+
             deleteCookie("auth");
+            console.log("Auth cookie deleted due to verification error.");
         }
+    } else {
+        console.log("No JWT found, redirecting to login.");
     }
 
     return NextResponse.redirect(new URL("/login", request.url));

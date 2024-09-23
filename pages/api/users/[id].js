@@ -20,18 +20,27 @@ export async function getServerSideProps(ctx) {
     const { id } = ctx.params;
 
     const filePath = path.join(process.cwd(), 'data', 'users.json');
-    const fileData = fs.readFileSync(filePath);
-    const users = JSON.parse(fileData);
+    
+    try {
+        const fileData = fs.readFileSync(filePath, 'utf8');
+        const users = JSON.parse(fileData);
 
-    const user = users.find(user => user._id === id);
+        const user = users.find(user => user._id === id);
 
-    if (!user) {
+        if (!user) {
+            return {
+                notFound: true,
+            };
+        }
+
+        return {
+            props: { user },
+        };
+    } catch (error) {
+        console.error("Error reading users.json:", error);
         return {
             notFound: true,
         };
     }
-
-    return {
-        props: { user },
-    };
 }
+

@@ -6,7 +6,7 @@ import { getCookie } from 'cookies-next';
 function oneUser({ user }) {
     const { currentUser } = useContext(AppContext);
 
-    if (user._id) {
+    if (user?._id) {
         return (
             <div className={styles.main}>
                 <div className={styles.post}>
@@ -51,13 +51,26 @@ function delUser(_id) {
 
 export default oneUser;
 
+
+
 export async function getServerSideProps(ctx) {
-    let urlID = `http://localhost:3000/api/users/${ctx.params.id}`;
+    const jwt = getCookie('auth', { req: ctx.req, res: ctx.res });
+
+    if (!jwt) {
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
+        };
+    }
+
+    let urlID = `http://localhost:3000/api/users/`;
 
     try {
         const response = await fetch(urlID, {
             headers: {
-                auth: ctx.req.cookies.auth,
+                auth: jwt,
             },
         });
 
@@ -68,7 +81,9 @@ export async function getServerSideProps(ctx) {
         }
 
         const data = await response.json();
-        return { props: { user: data } };
+        const filteredUser = data.filter(user => user._id === ctx.params.id);
+        
+        return { props: { user: filteredUser.length > 0 ? filteredUser[0] : null } };
 
     } catch (error) {
         console.error("Fetch error:", error);

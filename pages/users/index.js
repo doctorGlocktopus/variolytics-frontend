@@ -1,9 +1,8 @@
 import styles from '../../styles/Blog.module.css';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import AppContext from "../../AppContext";
-import {
-    setCookie, getCookie,
-} from 'cookies-next';
+import { setCookie, getCookie } from 'cookies-next';
 import { useContext } from "react";
 
 function delUser(_id) {
@@ -21,33 +20,36 @@ function delUser(_id) {
 
 function ListPageComponent(props) {
     const { currentUser } = useContext(AppContext);
+    const router = useRouter();
+
+    const handleUserClick = (userId) => {
+        setCookie('user_id', userId);
+        router.push(`/users/${userId}`);
+    };
+
     return (
         <div className={styles.main}>
             <div className={styles.post}>
                 <div className={styles.article}>
                     <h2>Benutzerliste</h2>
-                    {props.users.map(users =>
-                        <div className={styles.post} key={users._id}>
+                    {props.users.map(user => (
+                        <div className={styles.post} key={user._id}>
                             <nav>
-                                <Link
-                                    onClick={() => setCookie('user_id', users._id)}
-                                    href={{
-                                        pathname: "users/[id]",
-                                        query: { id: users._id },
-                                    }}>
-                                    <div className={styles.cursorPointer}>
-                                        Nr. {users._id} {users.username}
-                                        <h3>Rolle: {users.admin ? "Admin" : "User"}</h3>
-                                    </div>
-                                </Link>
+                                <div
+                                    className={styles.cursorPointer}
+                                    onClick={() => handleUserClick(user._id)}
+                                >
+                                    Nr. {user._id} {user.username}
+                                    <h3>Rolle: {user.admin ? "Admin" : "User"}</h3>
+                                </div>
                                 {currentUser?.admin && (
                                     <div>
-                                        <button onClick={() => delUser(users._id)}>Löschen</button>
+                                        <button onClick={() => delUser(user._id)}>Löschen</button>
                                     </div>
                                 )}
                             </nav>
                         </div>
-                    )}
+                    ))}
                 </div>
             </div>
         </div>
