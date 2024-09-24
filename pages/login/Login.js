@@ -56,7 +56,6 @@ export function Login() {
     return (
         <nav>
             <h5>{currentUser?.username}</h5>
-            <h5>{error}</h5>
             <h1>Login</h1>
             <form onSubmit={(e) => {
                 e.preventDefault();

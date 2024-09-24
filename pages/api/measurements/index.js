@@ -6,7 +6,7 @@ export default function handler(req, res) {
     const fileData = fs.readFileSync(filePath);
     const data = JSON.parse(fileData);
 
-    const { page = 1, sortBy = 'MeasureId', sortDirection = 'asc', searchTerm = '' } = req.query;
+    const { page = 1, sortBy = '', sortDirection = 'asc', searchTerm = '' } = req.query;
     const limit = 30;
 
     const filteredData = data.filter(device => {

@@ -14,25 +14,18 @@ const devices = [
   { id: (Math.random()) + 1, name: 'Device J' }
 ];
 
-const dates = [
-  new Date('2024-01-01'),
-  new Date('2024-02-01'),
-  new Date('2024-03-01'),
-  new Date('2024-04-01'),
-  new Date('2024-05-01'),
-  new Date('2024-06-01'),
-  new Date('2024-07-01'),
-  new Date('2024-08-01')
-];
+let currentId = 100000;
 
-let currentId = 100;
+const startDate = new Date('2024-08-01T23:59:59');
+const endDate = new Date('2024-01-01T00:00:00');
 
-const generateMockData = () => {
+const totalTimeSpan = endDate - startDate;
+
+const generateMockData = (timestamp) => {
   const randomDevice = devices[Math.floor(Math.random() * devices.length)];
-  const randomDate = dates[Math.floor(Math.random() * dates.length)];
 
   return {
-    MeasureId:  currentId++,
+    MeasureId: currentId --,
     DeviceId: randomDevice.id,
     DeviceName: randomDevice.name,
     N2O: (Math.random() * 50).toFixed(2),  // 0 - 50 ppm
@@ -41,16 +34,21 @@ const generateMockData = () => {
     O2: (Math.random() * 100).toFixed(2),  // 0 - 100 Vol.%
     FlowRate: (Math.random() * 5000).toFixed(2), // 0 - 5000 m³/h
     Temperature: (Math.random() * 100).toFixed(2), // 0 - 100°C
-    Date: randomDate.toISOString(),
+    Date: new Date(timestamp).toISOString(),
     IsActive: Math.random() > 0.5
   };
 };
 
 const generateData = (numRecords) => {
   const data = [];
+  
+  const interval = totalTimeSpan / numRecords;
+  
   for (let i = 0; i < numRecords; i++) {
-    data.push(generateMockData());
+    const timestamp = startDate.getTime() + (interval * i);
+    data.push(generateMockData(timestamp));
   }
+  
   return data;
 };
 

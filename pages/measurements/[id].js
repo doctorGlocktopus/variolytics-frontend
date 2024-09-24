@@ -17,6 +17,7 @@ function DeviceDetails({ device }) {
                     <button>Messung löschen</button>
                 </div>
             )}
+              <h2>Messungsnummer Nr. {device.MeasureId}</h2>
               <h2>Gerät Nr. {device.DeviceId}</h2>
               <h3>Gerätename: {device.DeviceName}</h3>
         

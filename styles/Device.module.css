@@ -59,3 +59,37 @@
 .table th:hover {
   color: #0070f3;
 }
+
+.container {
+  padding: 20px;
+}
+
+.searchInput {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.pagination {
+  margin-bottom: 20px;
+}
+
+.deviceGrid {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.deviceCard {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  flex: 1 0 calc(20% - 20px); /* Adjust as needed */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.deviceCard:hover {
+  background-color: #f5f5f5;
+}

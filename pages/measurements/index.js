@@ -16,8 +16,8 @@ function ListPageComponent() {
     const limit = 5;
     const page = parseInt(pageQuery) || 1;
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortColumn, setSortColumn] = useState('MeasureId');
-    const [sortDirection, setSortDirection] = useState('asc');
+    const [sortColumn, setSortColumn] = useState('Date');
+    const [sortDirection, setSortDirection] = useState('desc');
     const dispatch = useDispatch();
 
     const fetchDevices = async () => {
