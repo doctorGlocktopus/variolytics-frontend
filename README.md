@@ -1,6 +1,31 @@
+## Messungen als separate Dokumente (Flacher Ansatz mit Geräte-ID)
+
+{
+  "MeasureId": 100001,
+  "DeviceId": 1.695520394744324,
+  "DeviceName": "Device G",
+  "N2O": "25.82",
+  "CH4": "49.90",
+  "CO2": "13.23",
+  "O2": "38.98",
+  "FlowRate": "3941.19",
+  "Temperature": "64.84",
+  "Date": "2024-08-01T21:59:59.000Z"
+}
+
+Vorteile:
+Skalierbarkeit:
+Da jede Messung ein eigenes Dokument ist, stößt du nicht auf das Größenlimit von 16 MB pro Dokument. Du kannst also unbegrenzt viele Messungen pro Gerät speichern.
+
+Effiziente Filterung:
+Abfragen nach bestimmten Zeitstempeln, Werten oder anderen Kriterien können schnell erfolgen, da jede Messung ihr eigenes Dokument hat. Dies ist nützlich, wenn du nur eine Teilmenge der Messungen (z.B. alle Messungen eines bestimmten Zeitraums) benötigst.
+
+Einfachere Aktualisierung:
+Das Aktualisieren, Hinzufügen oder Löschen einer einzelnen Messung ist einfacher und effizienter, da du nur das betroffene Dokument ändern musst.
+
 # Benutzerverwaltungs-App
 
-Eine einfache Benutzerverwaltungs-App, die es ermöglicht, Benutzer zu registrieren, sich anzumelden und eine Benutzerliste anzuzeigen. Die Daten werden in einer JSON-Datei gespeichert.
+Eine einfache Benutzerverwaltungs-App, die es ermöglicht, Benutzer zu registrieren, sich anzumelden und eine Benutzerliste anzuzeigen. Die Daten werden in einer MongoDB gespeichert.
 
 ## Voraussetzungen
 
@@ -19,6 +44,7 @@ Eine einfache Benutzerverwaltungs-App, die es ermöglicht, Benutzer zu registrie
 2. **Mock Daten generieren**:
     
     node scripts/generateMockData.js
+    node scripts/generateMdbData.js
 
 ## Routenbeschreibung
 

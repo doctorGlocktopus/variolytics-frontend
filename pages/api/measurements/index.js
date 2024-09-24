@@ -1,38 +1,57 @@
-import fs from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
 
-export default function handler(req, res) {
-    const filePath = path.join(process.cwd(), 'data', 'mockData.json');
-    const fileData = fs.readFileSync(filePath);
-    const data = JSON.parse(fileData);
+const uri = process.env.MONGODB_URI;
 
-    const { page = 1, sortBy = '', sortDirection = 'asc', searchTerm = '' } = req.query;
+if (!uri) {
+    throw new Error('Please define the MONGODB_URI environment variable');
+}
+
+const client = new MongoClient(uri);
+
+export default async function handler(req, res) {
+    const { page = 1, sortBy = 'DeviceName', sortDirection = 'asc', searchTerm = '' } = req.query;
     const limit = 30;
 
-    const filteredData = data.filter(device => {
-        return (
-            device.MeasureId.toString().includes(searchTerm) ||
-            device.DeviceId.toString().includes(searchTerm) ||
-            device.DeviceName.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    });
+    try {
+        await client.connect();
+        const db = client.db('measurements');
+        const collection = db.collection('measurements');
 
-    const sortedData = filteredData.sort((a, b) => {
-        if (sortDirection === 'asc') {
-            return a[sortBy] > b[sortBy] ? 1 : -1;
-        } else {
-            return a[sortBy] < b[sortBy] ? 1 : -1;
-        }
-    });
+        const matchStage = {
+            $or: [
+                { MeasureId: { $regex: searchTerm, $options: 'i' } },
+                { DeviceId: { $regex: searchTerm, $options: 'i' } },
+                { DeviceName: { $regex: searchTerm, $options: 'i' } }
+            ]
+        };
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedData = sortedData.slice(startIndex, endIndex);
+        const sortOptions = {
+            [sortBy]: sortDirection === 'asc' ? 1 : -1
+        };
 
-    res.status(200).json({
-        total: filteredData.length,
-        page: Number(page),
-        limit: limit,
-        devices: paginatedData,
-    });
+        const pipeline = [
+            { $match: matchStage },
+            { $sort: sortOptions },
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+        ];
+
+        const devices = await collection.aggregate(pipeline).toArray();
+
+        const totalPipeline = [{ $match: matchStage }, { $count: 'total' }];
+        const totalResult = await collection.aggregate(totalPipeline).toArray();
+        const total = totalResult.length > 0 ? totalResult[0].total : 0;
+
+        res.status(200).json({
+            total: total,
+            page: Number(page),
+            limit: limit,
+            devices: devices,
+        });
+    } catch (error) {
+        console.error('Error fetching data from MongoDB:', error);
+        res.status(500).json({ error: 'Failed to fetch data from MongoDB' });
+    } finally {
+        await client.close();
+    }
 }

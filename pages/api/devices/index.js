@@ -1,35 +1,73 @@
-import fs from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
 
-export default function handler(req, res) {
-    const filePath = path.join(process.cwd(), 'data', 'mockData.json');
-    const fileData = fs.readFileSync(filePath);
-    const data = JSON.parse(fileData);
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
 
-    const { searchTerm = '' } = req.query;
+export default async function handler(req, res) {
+    try {
+        await client.connect();
+        const db = client.db('measurements');
+        const collection = db.collection('measurements');
 
-    const devices = {};
+        const { searchTerm = '', page = 1, limit = 10, selectedChart = 'N2O' } = req.query; // added selectedChart
+        const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    data.forEach(measurement => {
-        const { DeviceId, DeviceName, ...values } = measurement;
-        if (!devices[DeviceId]) { 
-            devices[DeviceId] = {
-                DeviceId,
-                DeviceName,
-                measurements: [],
-            };
-        }
-        devices[DeviceId].measurements.push(values);
-    });
+        const matchStage = {
+            $match: {
+                $or: [
+                    { DeviceId: { $regex: searchTerm, $options: 'i' } },
+                    { DeviceName: { $regex: searchTerm, $options: 'i' } }
+                ]
+            }
+        };
 
-    const filteredDevices = Object.values(devices).filter(device => 
-        device.DeviceId.toString().includes(searchTerm) ||
-        device.DeviceName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+        const groupStage = {
+            $group: {
+                _id: { DeviceId: "$DeviceId", DeviceName: "$DeviceName" },
+                measurements: {
+                    $push: {
+                        Date: "$Date",
+                        value: `$${selectedChart}`, // Only keep the selected measurement
+                    }
+                }
+            }
+        };
 
-    filteredDevices.sort((a, b) => a.DeviceName.localeCompare(b.DeviceName));
+        const pipeline = [
+            matchStage,
+            groupStage,
+            {
+                $sort: {
+                    "_id.DeviceName": 1
+                }
+            },
+            {
+                $project: {
+                    DeviceId: "$_id.DeviceId",
+                    DeviceName: "$_id.DeviceName",
+                    measurements: 1,
+                    _id: 0
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: parseInt(limit)
+            }
+        ];
 
-    res.status(200).json({
-        devices: filteredDevices,
-    });
+        const devices = await collection.aggregate(pipeline).toArray();
+
+        res.status(200).json({
+            devices: devices,
+            page: parseInt(page),
+            limit: parseInt(limit)
+        });
+    } catch (error) {
+        console.error('Error retrieving data from MongoDB:', error);
+        res.status(500).json({ error: 'Failed to fetch data' });
+    } finally {
+        await client.close();
+    }
 }
