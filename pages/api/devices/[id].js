@@ -1,21 +1,36 @@
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
+let client;
+let isConnected = false;
+
+async function connectToDatabase() {
+    if (client && isConnected) {
+        return client;
+    }
+
+    client = new MongoClient(uri);
+    await client.connect();
+    isConnected = true;
+    return client;
+}
 
 export default async function handler(req, res) {
     const { id } = req.query;
-    const { selectedChart } = req.query;
+    const { selectedChart = 'N2O' } = req.query;
 
     try {
-        await client.connect();
-        const db = client.db('measurements');
+        const connectedClient = await connectToDatabase();
+        const db = connectedClient.db('measurements');
         const collection = db.collection('measurements');
+
+        console.log('DeviceId:', id);
+        console.log('SelectedChart:', selectedChart);
 
         const pipeline = [
             {
                 $match: {
-                    DeviceId: id 
+                    DeviceId: parseFloat(id)
                 }
             },
             {
@@ -24,7 +39,7 @@ export default async function handler(req, res) {
                     measurements: {
                         $push: {
                             Date: "$Date",
-                            value: `$${selectedChart}`
+                            value: { $toDouble: `$${selectedChart}` }
                         }
                     }
                 }
@@ -42,16 +57,14 @@ export default async function handler(req, res) {
         const devices = await collection.aggregate(pipeline).toArray();
 
         if (devices.length > 0) {
-            res.status(200).json({
+            return res.status(200).json({
                 measurements: devices[0].measurements,
             });
         } else {
-            res.status(404).json({ error: 'Gerät nicht gefunden' });
+            return res.status(404).json({ error: 'Gerät nicht gefunden' });
         }
     } catch (error) {
         console.error('Fehler beim Abrufen der Daten von MongoDB:', error);
-        res.status(500).json({ error: 'Daten konnten nicht abgerufen werden' });
-    } finally {
-        await client.close();
+        return res.status(500).json({ error: 'Daten konnten nicht abgerufen werden' });
     }
 }

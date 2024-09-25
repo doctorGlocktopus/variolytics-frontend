@@ -1,3 +1,4 @@
+// devices/DeviceCard.js
 import { useEffect, useRef, useState } from "react";
 import CustomBarChart from './CustomBarChart';
 import styles from '../../styles/Device.module.css';
@@ -31,16 +32,12 @@ function DeviceCard({ device, onFetchData }) {
             setLoading(false);
         }
     };
-    
-    
-    
-    
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
-                fetchMeasurements(); // Fetch data when the device card is in view
-                observer.unobserve(deviceRef.current); // Stop observing after fetching
+                fetchMeasurements();
+                observer.unobserve(deviceRef.current);
             }
         });
 
@@ -49,17 +46,16 @@ function DeviceCard({ device, onFetchData }) {
         }
 
         return () => {
-            observer.disconnect(); // Clean up the observer
+            observer.disconnect();
         };
     }, [deviceRef]);
 
-    // Update measurements when selectedChart changes
     useEffect(() => {
-        fetchMeasurements(); // Fetch new measurements based on the selected chart
+        fetchMeasurements();
     }, [selectedChart]);
 
     const labels = measurements.map(measurement => new Date(measurement.Date).toLocaleDateString());
-    const valueData = measurements.map(measurement => parseFloat(measurement[selectedChart]) || 0); // Use selectedChart as key
+    const valueData = measurements.map(measurement => parseFloat(measurement.value) || 0);
 
     return (
         <div ref={deviceRef} className={styles.deviceCard}>

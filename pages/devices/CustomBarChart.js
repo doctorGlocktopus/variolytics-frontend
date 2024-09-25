@@ -1,7 +1,7 @@
 import styles from '../../styles/Device.module.css';
 
 function CustomBarChart({ labels, values, label }) {
-    const maxValue = Math.max(...values); // Maximaler Wert zur Skalierung der Balken
+    const maxValue = Math.max(...values);
 
     return (
         <div>
