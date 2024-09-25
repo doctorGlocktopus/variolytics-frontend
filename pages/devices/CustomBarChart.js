@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  Legend
+} from 'recharts';
 import { formatDate } from '../../utils/utils.js';
 
 function CustomBarChart({ values, label }) {
@@ -7,7 +18,7 @@ function CustomBarChart({ values, label }) {
 
   const data = values.map((item) => ({
     key: `${item.Date}-${item.value}-${item.temperature}-${item.flowRate}`,
-    date: item.Date,
+    date: item.date,
     value: item.value,
     temperature: item.temperature,
     flowRate: item.flowRate,
@@ -16,6 +27,7 @@ function CustomBarChart({ values, label }) {
   const toggleChartType = () => {
     setChartType((prevType) => (prevType === 'bar' ? 'line' : 'bar'));
   };
+
 
   return (
     <div>
@@ -34,14 +46,15 @@ function CustomBarChart({ values, label }) {
             <Tooltip 
               labelFormatter={(isoDateString) => formatDate(isoDateString)}
               formatter={(value, name) => {
+                let displayValue = value;
                 if (name === 'value') {
-                  return [`${label}: ${value}`, 'Messwert'];
+                  displayValue = `${label}: ${value}`;
                 } else if (name === 'temperature') {
-                  return [`Temperatur: ${value} °C`, 'Temperatur'];
+                  displayValue = `Temperatur: ${value} °C`;
                 } else if (name === 'flowRate') {
-                  return [`FlowRate: ${value} L/min`, 'FlowRate'];
+                  displayValue = `FlowRate: ${value} L/min`;
                 }
-                return value;
+                return [displayValue, name];
               }}
             />
             <Legend verticalAlign="top" align="right" />
@@ -54,20 +67,20 @@ function CustomBarChart({ values, label }) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="date"
-              tickFormatter={(isoDateString) => formatDate(isoDateString)}
             />
             <YAxis />
             <Tooltip 
               labelFormatter={(isoDateString) => formatDate(isoDateString)}
               formatter={(value, name) => {
+                let displayValue = value;
                 if (name === 'value') {
-                  return [`${label}: ${value}`, 'Messwert'];
+                  displayValue = `${label}: ${value}`;
                 } else if (name === 'temperature') {
-                  return [`Temperatur: ${value} °C`, 'Temperatur'];
+                  displayValue = `Temperatur: ${value} °C`;
                 } else if (name === 'flowRate') {
-                  return [`FlowRate: ${value} L/min`, 'FlowRate'];
+                  displayValue = `FlowRate: ${value} L/min`;
                 }
-                return value;
+                return [displayValue, name];
               }}
             />
             <Legend verticalAlign="top" align="right" />

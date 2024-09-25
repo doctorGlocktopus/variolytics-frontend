@@ -56,11 +56,11 @@ function DeviceCard({ device, onFetchData }) {
     }, [selectedChart, startDate, endDate]);
 
     const valueData = measurements.map(measurement => ({
-        key: `${measurement.Date}-${measurement.value}-${measurement.temperature}-${measurement.flowRate}`, // Alle Werte im Schlüssel
+        key: `${measurement.Date}-${measurement.value}-${measurement.temperature}-${measurement.flowRate}`,
         date: measurement.Date,
         value: parseFloat(measurement.value) || 0,
-        temperature: parseFloat(measurement.temperature) || 0, // Temperatur hinzufügen
-        flowRate: parseFloat(measurement.flowRate) || 0, // FlowRate hinzufügen
+        temperature: parseFloat(measurement.temperature) || 0,
+        flowRate: parseFloat(measurement.flowRate) || 0,
     }));
 
     return (

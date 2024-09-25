@@ -47,8 +47,8 @@ export default async function handler(req, res) {
                     DeviceName: 1,
                     Date: 1,
                     value: { $toDouble: `$${selectedChart}` },
-                    Temperature: { $toDouble: "$Temperature" }, // Temperatur konvertieren
-                    FlowRate: { $toDouble: "$FlowRate" },       // FlowRate konvertieren
+                    Temperature: { $toDouble: "$Temperature" },
+                    FlowRate: { $toDouble: "$FlowRate" },
                 }
             },
             {
@@ -58,8 +58,8 @@ export default async function handler(req, res) {
                         $push: {
                             Date: "$Date",
                             value: "$value",
-                            temperature: "$Temperature", // Temperatur in die Messungen einfügen
-                            flowRate: "$FlowRate",       // FlowRate in die Messungen einfügen
+                            temperature: "$Temperature",
+                            flowRate: "$FlowRate",
                         }
                     }
                 }
