@@ -39,8 +39,9 @@ export default async function handler(req, res) {
                     Date: {
                         $gte: start.toISOString(),
                         $lte: end.toISOString(),
-                    }
-                }
+                    },
+                },
+                
             },
             {
                 $group: {
@@ -64,8 +65,6 @@ export default async function handler(req, res) {
         ];
 
         const devices = await collection.aggregate(pipeline).toArray();
-
-        console.log(devices[0].measurements)
 
         if (devices.length > 0) {
             return res.status(200).json({

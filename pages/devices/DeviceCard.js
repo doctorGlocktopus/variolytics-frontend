@@ -55,8 +55,11 @@ function DeviceCard({ device, onFetchData }) {
         fetchMeasurements();
     }, [selectedChart, startDate, endDate]);
 
-    const labels = measurements.map(measurement => new Date(measurement.Date).toLocaleDateString());
-    const valueData = measurements.map(measurement => parseFloat(measurement.value) || 0);
+    const valueData = measurements.map(measurement => ({
+        key: `${measurement.Date}-${measurement.value}`,
+        date: measurement.Date,
+        value: parseFloat(measurement.value) || 0
+    }));
 
     return (
         <div ref={deviceRef} className={styles.deviceCard}>
@@ -88,7 +91,10 @@ function DeviceCard({ device, onFetchData }) {
                 <p>Lade Messdaten...</p>
             ) : (
                 measurements.length > 0 ? (
-                    <CustomBarChart labels={labels} values={valueData} label={`${selectedChart} (Einheit)`} />
+                    <CustomBarChart 
+                        values={valueData} 
+                        label={`${selectedChart} (Einheit)`} 
+                    />
                 ) : (
                     <p>Keine Messdaten verfügbar</p>
                 )
