@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI; // Stelle sicher, dass diese Umgebungsvariable gesetzt ist
+const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 
 export default async function handler(req, res) {
@@ -12,11 +12,10 @@ export default async function handler(req, res) {
         const db = client.db('measurements');
         const collection = db.collection('measurements');
 
-        // Suche nach der spezifischen Geräte-ID
         const pipeline = [
             {
                 $match: {
-                    DeviceId: id // Vergleich mit der String-ID
+                    DeviceId: id 
                 }
             },
             {
@@ -25,7 +24,7 @@ export default async function handler(req, res) {
                     measurements: {
                         $push: {
                             Date: "$Date",
-                            value: `$${selectedChart}` // Dynamisch basierend auf selectedChart
+                            value: `$${selectedChart}`
                         }
                     }
                 }

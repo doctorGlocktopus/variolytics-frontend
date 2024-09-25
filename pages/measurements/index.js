@@ -62,6 +62,7 @@ function ListPageComponent() {
     };
 
     const handleMeasureClick = (MeasureId) => {
+        console.log(MeasureId)
         router.push(`/measurements/${MeasureId}`);
     };
 
