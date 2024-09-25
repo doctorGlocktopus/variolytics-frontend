@@ -16,11 +16,11 @@ const devices = [
   { id: (Math.random()) + 1, name: 'Device J' }
 ];
 
-let currentId = 100000;
+let currentId = 10000;
 
-const startDate = new Date('2024-08-01T23:59:59');
-const endDate = new Date('2024-01-01T00:00:00');
-const totalTimeSpan = endDate - startDate;
+const startDate = new Date('2024-09-25T00:00:00');
+const endDate = new Date('2024-09-30T00:00:00');
+const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
 const generateMockData = (timestamp) => {
   const randomDevice = devices[Math.floor(Math.random() * devices.length)];
@@ -40,19 +40,26 @@ const generateMockData = (timestamp) => {
   };
 };
 
-
 const generateData = (numRecords) => {
   const data = [];
-  const interval = totalTimeSpan / numRecords;
+  const recordsPerDay = Math.ceil(numRecords / totalDays);
   
-  for (let i = 0; i < numRecords; i++) {
-    const timestamp = startDate.getTime() + (interval * i);
-    data.push(generateMockData(timestamp));
+  for (let day = 0; day < totalDays; day++) {
+    for (let i = 0; i < recordsPerDay; i++) {
+      const randomHour = Math.floor(Math.random() * 24);
+      const randomMinute = Math.floor(Math.random() * 60);
+      const randomSecond = Math.floor(Math.random() * 60);
+      const timestamp = new Date(startDate);
+      
+      timestamp.setDate(startDate.getDate() + day);
+      timestamp.setHours(randomHour, randomMinute, randomSecond, 0);
+      
+      data.push(generateMockData(timestamp));
+    }
   }
   
   return data;
 };
-
 
 const saveDataToMongoDB = async (data) => {
   try {
@@ -69,6 +76,6 @@ const saveDataToMongoDB = async (data) => {
   }
 };
 
-const numRecords = 100000;
+const numRecords = 10000;
 const mockData = generateData(numRecords);
 saveDataToMongoDB(mockData);
