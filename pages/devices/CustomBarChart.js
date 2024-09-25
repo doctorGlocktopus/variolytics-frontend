@@ -14,9 +14,18 @@ function CustomBarChart({ labels, values, label }) {
                 ))}
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {labels.map((label, index) => (
-                    <span key={index} style={{ fontSize: '10px' }}>{label}</span>
-                ))}
+            {labels.map((label, index) => {
+                const date = new Date(label);
+
+                const dayMonth = date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+                const time = date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false });
+                
+                return (
+                    <span key={index} style={{ fontSize: '10px' }}>
+                        {`${dayMonth}, ${time}`}
+                    </span>
+                );
+            })}
             </div>
         </div>
     );

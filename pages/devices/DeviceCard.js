@@ -1,4 +1,3 @@
-// devices/DeviceCard.js
 import { useEffect, useRef, useState } from "react";
 import CustomBarChart from './CustomBarChart';
 import styles from '../../styles/Device.module.css';
