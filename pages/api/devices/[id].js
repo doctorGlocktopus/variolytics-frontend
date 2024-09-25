@@ -71,6 +71,19 @@ export default async function handler(req, res) {
                     measurements: 1,
                     _id: 0
                 }
+            },
+            {
+                // Sort the measurements by Date in ascending order
+                $unwind: "$measurements"
+            },
+            {
+                $sort: { "measurements.Date": 1 } // Ascending order
+            },
+            {
+                $group: {
+                    _id: { DeviceId: "$DeviceId", DeviceName: "$DeviceName" },
+                    measurements: { $push: "$measurements" }
+                }
             }
         ];
 
