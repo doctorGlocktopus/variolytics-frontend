@@ -4,8 +4,8 @@ const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 
 export default async function handler(req, res) {
-    const { id } = req.query; // Geräte-ID
-    const { selectedChart } = req.query; // Den ausgewählten Messwert
+    const { id } = req.query;
+    const { selectedChart } = req.query;
 
     try {
         await client.connect();

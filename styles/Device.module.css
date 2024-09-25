@@ -81,6 +81,7 @@
 }
 
 .deviceCard {
+  min-height: 500px;
   border: 1px solid #ccc;
   padding: 15px;
   border-radius: 5px;

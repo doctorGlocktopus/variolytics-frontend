@@ -22,9 +22,9 @@ function DeviceCard({ device, onFetchData }) {
             if (data.measurements) {
                 setMeasurements(data.measurements);
             } else {
-                setMeasurements([]); // Wenn keine Daten zurückgegeben werden, setze auf leer
+                setMeasurements([]);
             }
-            onFetchData(); // Notify parent that data has been fetched
+            onFetchData();
         } catch (error) {
             console.error('Fehler beim Abrufen der Messdaten:', error);
         } finally {
