@@ -19,7 +19,6 @@ export default async function handler(req, res) {
     const { id } = req.query;
     const { selectedChart = 'N2O', startDate, endDate } = req.query;
 
-
     const today = new Date();
     const defaultStartDate = new Date(today);
     defaultStartDate.setDate(today.getDate() - 7);
@@ -41,7 +40,16 @@ export default async function handler(req, res) {
                         $lte: end.toISOString(),
                     },
                 },
-                
+            },
+            {
+                $project: {
+                    DeviceId: 1,
+                    DeviceName: 1,
+                    Date: 1,
+                    value: { $toDouble: `$${selectedChart}` },
+                    Temperature: { $toDouble: "$Temperature" }, // Temperatur konvertieren
+                    FlowRate: { $toDouble: "$FlowRate" },       // FlowRate konvertieren
+                }
             },
             {
                 $group: {
@@ -49,7 +57,9 @@ export default async function handler(req, res) {
                     measurements: {
                         $push: {
                             Date: "$Date",
-                            value: { $toDouble: `$${selectedChart}` }
+                            value: "$value",
+                            temperature: "$Temperature", // Temperatur in die Messungen einfügen
+                            flowRate: "$FlowRate",       // FlowRate in die Messungen einfügen
                         }
                     }
                 }
