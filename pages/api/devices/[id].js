@@ -17,20 +17,29 @@ async function connectToDatabase() {
 
 export default async function handler(req, res) {
     const { id } = req.query;
-    const { selectedChart = 'N2O' } = req.query;
+    const { selectedChart = 'N2O', startDate, endDate } = req.query;
+
+
+    const today = new Date();
+    const defaultStartDate = new Date(today);
+    defaultStartDate.setDate(today.getDate() - 7);
+
+    const start = startDate ? new Date(startDate) : defaultStartDate;
+    const end = endDate ? new Date(endDate) : today;
 
     try {
         const connectedClient = await connectToDatabase();
         const db = connectedClient.db('measurements');
         const collection = db.collection('measurements');
 
-        console.log('DeviceId:', id);
-        console.log('SelectedChart:', selectedChart);
-
         const pipeline = [
             {
                 $match: {
-                    DeviceId: parseFloat(id)
+                    DeviceId: parseFloat(id),
+                    Date: {
+                        $gte: start.toISOString(),
+                        $lte: end.toISOString(),
+                    }
                 }
             },
             {
@@ -61,7 +70,7 @@ export default async function handler(req, res) {
                 measurements: devices[0].measurements,
             });
         } else {
-            return res.status(404).json({ error: 'Gerät nicht gefunden' });
+            return res.status(404).json({ error: 'Keine Messdaten gefunden für das Gerät' });
         }
     } catch (error) {
         console.error('Fehler beim Abrufen der Daten von MongoDB:', error);

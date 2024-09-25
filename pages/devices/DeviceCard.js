@@ -6,12 +6,14 @@ function DeviceCard({ device, onFetchData }) {
     const [selectedChart, setSelectedChart] = useState('N2O');
     const [measurements, setMeasurements] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const deviceRef = useRef();
 
     const fetchMeasurements = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/devices/${device.DeviceId}?selectedChart=${selectedChart}`);
+            const response = await fetch(`/api/devices/${device.DeviceId}?selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`);
             
             if (!response.ok) {
                 throw new Error('Fehler beim Abrufen der Messdaten: ' + response.statusText);
@@ -51,7 +53,7 @@ function DeviceCard({ device, onFetchData }) {
 
     useEffect(() => {
         fetchMeasurements();
-    }, [selectedChart]);
+    }, [selectedChart, startDate, endDate]);
 
     const labels = measurements.map(measurement => new Date(measurement.Date).toLocaleDateString());
     const valueData = measurements.map(measurement => parseFloat(measurement.value) || 0);
@@ -66,6 +68,22 @@ function DeviceCard({ device, onFetchData }) {
                 <option value="CO2">CO2 (Vol.%)</option>
                 <option value="O2">O2 (Vol.%)</option>
             </select>
+
+            <div>
+                <label>Startdatum:</label>
+                <input 
+                    type="date" 
+                    value={startDate} 
+                    onChange={(e) => setStartDate(e.target.value)} 
+                />
+                <label>Enddatum:</label>
+                <input 
+                    type="date" 
+                    value={endDate} 
+                    onChange={(e) => setEndDate(e.target.value)} 
+                />
+            </div>
+
             {loading ? (
                 <p>Lade Messdaten...</p>
             ) : (
