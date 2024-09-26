@@ -1,4 +1,4 @@
-import styles from '../../styles/Blog.module.css';
+import styles from '../../styles/User.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AppContext from "../../AppContext";
@@ -28,30 +28,34 @@ function ListPageComponent(props) {
     };
 
     return (
-        <div className={styles.main}>
-            <div className={styles.post}>
-                <div className={styles.article}>
-                    <h2>Benutzerliste</h2>
+        <div className={styles.container}>
+            <h2>Benutzerliste</h2>
+            <table className={styles.userTable}>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Benutzername</th>
+                        <th>Rolle</th>
+                        {currentUser?.admin && <th>Aktionen</th>} {/* Show actions column only for admin */}
+                    </tr>
+                </thead>
+                <tbody>
                     {props.users.map(user => (
-                        <div className={styles.post} key={user._id}>
-                            <nav>
-                                <div
-                                    className={styles.cursorPointer}
-                                    onClick={() => handleUserClick(user._id)}
-                                >
-                                    Nr. {user._id} {user.username}
-                                    <h3>Rolle: {user.admin ? "Admin" : "User"}</h3>
-                                </div>
-                                {currentUser?.admin && (
-                                    <div>
-                                        <button onClick={() => delUser(user._id)}>Löschen</button>
-                                    </div>
-                                )}
-                            </nav>
-                        </div>
+                        <tr key={user._id} className={styles.cursorPointer} onClick={() => handleUserClick(user._id)}>
+                            <td>{user._id}</td>
+                            <td>{user.username}</td>
+                            <td>{user.admin ? "Admin" : "User"}</td>
+                            {currentUser?.admin && (
+                                <td>
+                                    <button className={styles.deleteButton} onClick={(e) => { e.stopPropagation(); delUser(user._id); }}>
+                                        Löschen
+                                    </button>
+                                </td>
+                            )}
+                        </tr>
                     ))}
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
     );
 }

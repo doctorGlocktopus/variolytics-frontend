@@ -1,5 +1,5 @@
-import { useState, useRef, useContext } from 'react';
-import styles from '../../styles/Home.module.css';
+import { useRef} from 'react';
+import styles from '../../styles/Login.module.css';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
 
@@ -65,22 +65,22 @@ export default function Register() {
     }
 
     return (
-        <div className={styles.loginForm}>
+        <div>
             <h1>Registrieren</h1>
-            <form onSubmit={register}>
-                <label className={styles.flexRunter}>Benutzername:
+            <form className={styles.form} onSubmit={register}>
+                <label>Benutzername:
                     <input ref={username} required />
                 </label>
 
-                <label className={styles.flexRunter}>E-Mail Adresse:
+                <label>E-Mail Adresse:
                     <input ref={email} required />
                 </label>
 
-                <label className={styles.flexRunter}>Passwort:
+                <label>Passwort:
                     <input type="password" ref={password} required />
                 </label>
 
-                <label className={styles.flexRunter}>Passwort wiederholen:
+                <label>Passwort wiederholen:
                     <input type="password" ref={passwordTypo} required />
                 </label>
 

@@ -13,9 +13,13 @@
   display: flex;
   background-color: #f0f0f0;
   gap: 10px;
-  justify-content: space-around;
+  justify-content: center;
   padding: 10px;
   border-radius: 10px;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 50%;
+  margin-top: 10%;
 }
 
 .tabContainer button {
@@ -46,5 +50,13 @@
 .mainContainer {
   display: flex;
   width: 100%;
-  justify-content: space-around;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }

@@ -1,0 +1,99 @@
+/* Main Container Styles */
+.container {
+    background-color: #f0f0f0; /* Light background for better readability */
+    height: fit-content;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Search Input Styles */
+.searchInput {
+    margin-bottom: 20px; /* Space below the input */
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: space-between; /* Space buttons evenly */
+    margin-bottom: 20px; /* Space below pagination */
+}
+
+/* Device Table Styles */
+.deviceTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.deviceTable th,
+.deviceTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.deviceTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deviceTable th:hover {
+    background-color: #e0e0e0;
+}
+
+.deviceTable tr:nth-child(odd) {
+    background-color: #fafafa; /* Zebra striping for readability */
+}
+
+.deviceTable td {
+    font-size: 16px;
+}
+
+/* Cursor Pointer Styles */
+.cursorPointer {
+    cursor: pointer;
+}
+
+/* Delete Button Styles */
+.deleteButton {
+    padding: 10px 15px;
+    background-color: #ff4d4d; /* Red background for delete button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deleteButton:hover {
+    background-color: #ff3333; /* Darker red on hover */
+}
+
+.inputField {
+    border: none;         
+    background: transparent;
+    outline: none;     
+    font-size: 1rem;   
+    padding: 0.5rem;   
+}
+
+.updateButton {
+    background-color: #4CAF50;
+    color: white;              
+    border: none;               
+    padding: 0.5rem 1rem;       
+    border-radius: 5px;         
+    cursor: pointer;            
+}
+
+.updateButton:hover {
+    background-color: #45a049;
+}

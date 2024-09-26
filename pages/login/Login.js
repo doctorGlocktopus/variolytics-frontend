@@ -2,7 +2,7 @@ import {
     useRef,
     useContext,
 } from 'react';
-import styles from '../../styles/Home.module.css';
+import styles from '../../styles/Login.module.css';
 import AppContext from "../../AppContext";
 import { setCookie } from 'cookies-next';
 import Router from "next/router";
@@ -54,19 +54,19 @@ export function Login() {
     };
 
     return (
-        <div className={styles.loginForm}>
+        <div>
             <h1>Login</h1>
-            <form onSubmit={(e) => {
+            <form  className={styles.form} onSubmit={(e) => {
                 e.preventDefault();
                 login();
             }} >
-                <label className={styles.flexRunter}>Benutzername:
+                <label>Benutzername:
                     <input ref={username} required />
                 </label>
-                <label className={styles.flexRunter}>Passwort:
+                <label>Passwort:
                     <input type="password" ref={password} required />
                 </label>
-                <button className={styles.submit} type="submit">Einloggen</button>
+                <button type="submit">Einloggen</button>
             </form>
         </div>
     );
