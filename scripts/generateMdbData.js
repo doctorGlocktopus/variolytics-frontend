@@ -18,8 +18,8 @@ const devices = [
 
 let currentId = 10000;
 
-const startDate = new Date('2024-09-25T00:00:00');
-const endDate = new Date('2024-09-30T00:00:00');
+const startDate = new Date('2024-01-01T00:00:00');
+const endDate = new Date('2024-09-25T00:00:00');
 const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
 const generateMockData = (timestamp) => {
