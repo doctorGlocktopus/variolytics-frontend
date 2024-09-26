@@ -44,7 +44,13 @@ Eine einfache Benutzerverwaltungs-App, die es ermöglicht, Benutzer zu registrie
 2. **Mock Daten generieren**:
     
     node scripts/generateMockData.js
+
+    MongoDB Atlas installieren
+    neue Verbindung aufbauen (mongodb://localhost:27017)
+    neue Datenbank + Collection erstellen
+    Werte eintragen mit:
     node scripts/generateMdbData.js
+  
 
 ## Routenbeschreibung
 
