@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const uri = process.env.MONGODB_URI;; 
+const uri = 'mongodb://localhost:27017'; 
 const client = new MongoClient(uri);
 
 const devices = [
@@ -33,7 +33,7 @@ const generateMockData = (timestamp) => {
     CH4: (Math.random() * 100).toFixed(2), // 0 - 100 ppm
     CO2: (Math.random() * 20).toFixed(2),  // 0 - 20 Vol.%
     O2: (Math.random() * 100).toFixed(2),  // 0 - 100 Vol.%
-    FlowRate: (Math.random() * 5000).toFixed(2), // 0 - 5000 m³/h
+    FlowRate: (Math.random() * 200).toFixed(2), // 0 - 5000 m³/h
     Temperature: (Math.random() * 100).toFixed(2), // 0 - 100°C
     Date: new Date(timestamp).toISOString(),
     IsActive: Math.random() > 0.5

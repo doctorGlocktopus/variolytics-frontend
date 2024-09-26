@@ -16,13 +16,25 @@ import { formatDate } from '../../utils/utils.js';
 function CustomBarChart({ values, label }) {
   const [chartType, setChartType] = useState('bar');
 
-  const data = values.map((item) => ({
-    key: item.key,
-    date: item.date,
-    value: item.value,
-    temperature: item.temperature,
-    flowRate: item.flowRate,
-  }));
+  const data = values.map((item) => {
+    const date = new Date(item.date);
+    
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    const hours = String(date.getHours()).padStart(2, '0'); 
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+  
+    const formattedDate = `${day}/${month}/${year}, ${hours}:${minutes}`;
+    
+    return {
+      key: item.key,
+      date: formattedDate,
+      value: item.value,
+      temperature: item.temperature,
+      flowRate: item.flowRate,
+    };
+  });
 
   const toggleChartType = () => {
     setChartType((prevType) => (prevType === 'bar' ? 'line' : 'bar'));
