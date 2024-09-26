@@ -9,9 +9,11 @@ function MyApp({ Component, pageProps }) {
     return (
         <Provider store={store}>
             <AppContextProvider>
-                <Navbar />
-                <Component {...pageProps} />
-                <Notification />
+                <main className="mainContainer">
+                    <Navbar />
+                    <Component {...pageProps} />
+                    <Notification />
+                </main>
             </AppContextProvider>
         </Provider>
     );

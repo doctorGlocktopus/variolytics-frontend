@@ -46,7 +46,10 @@ export default async function handler(req, res) {
                     DeviceId: 1,
                     DeviceName: 1,
                     Date: 1,
-                    value: { $toDouble: `$${selectedChart}` },
+                    N2O: { $toDouble: "$N2O" },
+                    CH4: { $toDouble: "$CH4" },
+                    CO2: { $toDouble: "$CO2" },
+                    O2: { $toDouble: "$O2" },
                     Temperature: { $toDouble: "$Temperature" },
                     FlowRate: { $toDouble: "$FlowRate" },
                 }
@@ -58,7 +61,15 @@ export default async function handler(req, res) {
                         $push: {
                             key: "$_id",
                             date: "$Date",
-                            value: "$value",
+                            value: selectedChart === 'all' ? {
+                                N2O: { value: "$N2O", unit: "ppm" },
+                                CH4: { value: "$CH4", unit: "ppm" },
+                                CO2: { value: "$CO2", unit: "Vol.%" },
+                                O2: { value: "$O2", unit: "Vol.%" }
+                            } : {
+                                value: "$value",
+                                unit: selectedChart
+                            },
                             temperature: "$Temperature",
                             flowRate: "$FlowRate",
                         }
@@ -77,7 +88,7 @@ export default async function handler(req, res) {
                 $unwind: "$measurements"
             },
             {
-                $sort: { "measurements.Date": 1 }
+                $sort: { "measurements.date": 1 }
             },
             {
                 $group: {
@@ -88,8 +99,6 @@ export default async function handler(req, res) {
         ];
 
         const devices = await collection.aggregate(pipeline).toArray();
-
-        // console.log(devices[0].measurements)
 
         if (devices.length > 0) {
             return res.status(200).json({

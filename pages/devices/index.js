@@ -35,7 +35,6 @@ function ListPageComponent() {
 
     return (
         <div className={styles.container}>
-            <h2>Geräte</h2>
             {loading ? (
                 <p>Lade Geräte...</p>
             ) : (

@@ -1,4 +1,4 @@
-import styles from '../../styles/Device.module.css';
+import styles from '../../styles/Measurements.module.css';
 import { useRouter } from 'next/router';
 import AppContext from "../../AppContext";
 import { getCookie } from 'cookies-next';
@@ -62,7 +62,6 @@ function ListPageComponent() {
     };
 
     const handleMeasureClick = (MeasureId) => {
-        console.log(MeasureId)
         router.push(`/measurements/${MeasureId}`);
     };
 
@@ -74,8 +73,7 @@ function ListPageComponent() {
     };
 
     return (
-        <div className={styles.tableContainer}>
-            <h2>Messungen</h2>
+        <div className={styles.container}>
             <input 
                 type="text" 
                 placeholder="Suche..." 
@@ -88,7 +86,7 @@ function ListPageComponent() {
                 <span>Seite {page} von {totalPages}</span>
                 <button onClick={() => changePage(page + 1)} disabled={page === totalPages}>Nächste</button>
             </div>
-            <table className={styles.table}>
+            <table className={styles.deviceTable}>
                 <thead>
                     <tr>
                         <th onClick={() => sortDevices('MeasureId')}>Messungs ID</th>
@@ -121,7 +119,7 @@ function ListPageComponent() {
                             <td>{device.IsActive ? "Aktiv" : "Inaktiv"}</td>
                             {currentUser?.admin && (
                                 <td>
-                                    <button onClick={(e) => { e.stopPropagation(); delMeasure(device.MeasureId); }}>Löschen</button>
+                                    <button className={styles.deleteButton} onClick={(e) => { e.stopPropagation(); delMeasure(device.MeasureId); }}>Löschen</button>
                                 </td>
                             )}
                         </tr>

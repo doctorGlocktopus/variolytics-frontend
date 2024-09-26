@@ -25,37 +25,11 @@ a {
     background-color: white;
     font-family: monospace;
   }
+}
 
-  nav {
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 6px #00000029;
-    border: 2px solid #707070;
-    border-radius: 15px;
-    opacity: 1;
-    padding: 20px;
-    width: fit-content;
-  }
-
-  button {
-    color: #000000;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 6px #00000029;
-    border: 2px solid #707070;
-    border-radius: 15px;
-    opacity: 1;
-    padding: 5px;
-  }
-
-  header {
-    width: 100%;
-    background-color: #ffffff;
-    align-items: center;
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
-  }
-
-  a:hover {
-    color: #A87F36;
-  }
+.mainContainer {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 1%;
 }

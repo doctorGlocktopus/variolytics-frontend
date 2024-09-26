@@ -23,17 +23,15 @@ export async function middleware(request) {
             }
         } catch (error) {
             console.error("JWT Verification Error: ", error);
-
             deleteCookie("auth");
             console.log("Auth cookie deleted due to verification error.");
         }
-    } else {
-        console.log("No JWT found, redirecting to login.");
     }
 
+    console.log("No JWT found, redirecting to login.");
     return NextResponse.redirect(new URL("/login", request.url));
 }
 
 export const config = {
-    matcher: ['/measurements/:path*', '/users/:path*', '/devices/:path '],
+    matcher: ['/measurements/:path*', '/users/:path*', '/devices/:path*', '/'],
 };

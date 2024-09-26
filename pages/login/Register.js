@@ -65,29 +65,27 @@ export default function Register() {
     }
 
     return (
-        <nav>
-            <div>
-                <h1>Registrieren</h1>
-                <form onSubmit={register}>
-                    <label className={styles.flexRunter}>Benutzername:
-                        <input ref={username} required />
-                    </label>
+        <div className={styles.loginForm}>
+            <h1>Registrieren</h1>
+            <form onSubmit={register}>
+                <label className={styles.flexRunter}>Benutzername:
+                    <input ref={username} required />
+                </label>
 
-                    <label className={styles.flexRunter}>E-Mail Adresse:
-                        <input ref={email} required />
-                    </label>
+                <label className={styles.flexRunter}>E-Mail Adresse:
+                    <input ref={email} required />
+                </label>
 
-                    <label className={styles.flexRunter}>Passwort:
-                        <input type="password" ref={password} required />
-                    </label>
+                <label className={styles.flexRunter}>Passwort:
+                    <input type="password" ref={password} required />
+                </label>
 
-                    <label className={styles.flexRunter}>Passwort wiederholen:
-                        <input type="password" ref={passwordTypo} required />
-                    </label>
+                <label className={styles.flexRunter}>Passwort wiederholen:
+                    <input type="password" ref={passwordTypo} required />
+                </label>
 
-                    <button className={styles.submit} type="submit">Registrieren</button>
-                </form>
-            </div>
-        </nav>
+                <button className={styles.submit} type="submit">Registrieren</button>
+            </form>
+        </div>
     );
 }

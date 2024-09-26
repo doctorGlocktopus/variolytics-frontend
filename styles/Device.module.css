@@ -1,83 +1,70 @@
-.deviceTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .deviceTable th, .deviceTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .deviceTable th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  .deviceTable td {
-    font-size: 16px;
-  }
-  
-  .deviceTable td[style] {
-    font-weight: bold;
-  }
-  
-  /* Styles für den Button mit einer Klasse */
-  .deleteButton {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .deleteButton:hover {
-    background-color: #ff3333;
-  }
-  
-  .searchInput {
-    margin: 20px 0;
-    padding: 10px;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    
- }
- .table th {
-  cursor: pointer;
-  padding: 10px;
-  background-color: #f2f2f2;
-  transition: background-color 0.3s;
-}
-
-.table th:hover {
-  background-color: #e0e0e0;
-}
-
-.table th:hover {
-  color: #0070f3;
-}
-
+/* Container Styles */
 .container {
   padding: 20px;
+  width: -webkit-fill-available; /* Consider using a standard width property */
 }
 
+/* Table Styles */
+.deviceTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.deviceTable th, .deviceTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.deviceTable th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.deviceTable td {
+  font-size: 16px;
+}
+
+.deviceTable td[style] {
+  font-weight: bold;
+}
+
+/* Search Input Styles */
 .searchInput {
   margin-bottom: 20px;
+  padding: 10px;
   width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
+/* Button Styles */
+.deleteButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background-color: #ff3333;
+}
+
+/* Pagination Styles */
 .pagination {
   margin-bottom: 20px;
 }
 
+/* Flexbox Styles for Device Grid */
 .deviceGrid {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   gap: 20px;
+  background-color: #f0f0f0;
 }
 
 .deviceCard {
@@ -85,7 +72,7 @@
   border: 1px solid #ccc;
   padding: 15px;
   border-radius: 5px;
-  flex: 1 0 calc(20% - 20px); /* Adjust as needed */
+  flex: 1 0 calc(20% - 20px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: background-color 0.3s;
@@ -95,19 +82,19 @@
   background-color: #f5f5f5;
 }
 
-/* styles/Device.module.css */
+/* Chart Styles */
 .chart {
   display: flex;
   align-items: flex-end;
   justify-content: space-around;
-  height: 200px; /* Höhe des Diagrammbereichs */
+  height: 200px;
   margin: 20px 0;
   border: 1px solid #ccc;
   padding: 10px;
 }
 
 .chart-bar {
-  width: 20px; /* Breite eines Balkens */
+  width: 20px;
   background-color: rgba(54, 162, 235, 0.5);
   transition: height 0.3s ease-in-out;
   text-align: center;
@@ -118,10 +105,11 @@
 
 .chart-bar span {
   margin-bottom: 5px;
-  font-size: 10px; /* Text über dem Balken */
+  font-size: 10px;
   color: #333;
 }
 
+/* Loader Styles */
 .loader {
   width: 100%;
   height: 4px;
@@ -140,4 +128,57 @@
   0% { width: 0; }
   50% { width: 100%; }
   100% { width: 0; }
+}
+
+/* Tab Container Styles */
+.tabContainer {
+  display: flex;
+  background-color: #f0f0f0;
+  gap: 10px;
+}
+
+.tabContainer button {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.tabContainer button:hover {
+  background-color: #dddcdc;
+}
+
+.tabContainer input {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: #f0f0f0;
+}
+
+.tabContainer input:hover {
+  background-color: #dddcdc;
+}
+
+.activeTab {
+  background-color: #007bff;
+  color: #00c49f;
+}
+
+/* Miscellaneous */
+.table th {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f2f2f2;
+  transition: background-color 0.3s;
+}
+
+.table th:hover {
+  background-color: #e0e0e0;
+  color: #0070f3;
+}
+
+.flexX {
+  display: flex;
+  flex-direction: column;
 }

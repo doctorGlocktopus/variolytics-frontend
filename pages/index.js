@@ -1,9 +1,10 @@
-import styles from '../styles/Blog.module.css';
+import styles from '../styles/Login.module.css';
+import LoginForm from './login/index.js'
 export default function Home() {
 
     return (
-        <main className={styles.main}>
-            hallo welt
-        </main>
+        <div className={styles.loginForm}>
+            <LoginForm />
+        </div>
     );
 }

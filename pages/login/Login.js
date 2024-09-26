@@ -54,8 +54,7 @@ export function Login() {
     };
 
     return (
-        <nav>
-            <h5>{currentUser?.username}</h5>
+        <div className={styles.loginForm}>
             <h1>Login</h1>
             <form onSubmit={(e) => {
                 e.preventDefault();
@@ -69,6 +68,6 @@ export function Login() {
                 </label>
                 <button className={styles.submit} type="submit">Einloggen</button>
             </form>
-        </nav>
+        </div>
     );
 }
