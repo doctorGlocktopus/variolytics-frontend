@@ -16,7 +16,9 @@ function ListPageComponent() {
         try {
             const response = await fetch(`/api/devices?searchTerm=${searchTerm}&page=${page}&limit=10`);
             const data = await response.json();
-            setDevices(prevDevices => [...prevDevices, ...data.devices]);
+            
+            setDevices(data.devices);
+            
             if (data.devices.length < 10) {
                 setHasMore(false);
             }

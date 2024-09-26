@@ -17,7 +17,7 @@ function CustomBarChart({ values, label }) {
   const [chartType, setChartType] = useState('bar');
 
   const data = values.map((item) => ({
-    key: `${item.Date}-${item.value}-${item.temperature}-${item.flowRate}`,
+    key: item.key,
     date: item.date,
     value: item.value,
     temperature: item.temperature,

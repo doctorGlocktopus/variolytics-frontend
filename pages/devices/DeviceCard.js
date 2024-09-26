@@ -6,12 +6,13 @@ function DeviceCard({ device, onFetchData }) {
     const [selectedChart, setSelectedChart] = useState('N2O');
     const [measurements, setMeasurements] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState('2024-09-01');
+    const [endDate, setEndDate] = useState('2024-09-25');
     const deviceRef = useRef();
 
     const fetchMeasurements = async () => {
         setLoading(true);
+
         try {
             const response = await fetch(`/api/devices/${device.DeviceId}?selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`);
             
@@ -56,8 +57,8 @@ function DeviceCard({ device, onFetchData }) {
     }, [selectedChart, startDate, endDate]);
 
     const valueData = measurements.map(measurement => ({
-        key: `${measurement.Date}-${measurement.value}-${measurement.temperature}-${measurement.flowRate}`,
-        date: measurement.Date,
+        key: measurement.key,
+        date: measurement.date,
         value: parseFloat(measurement.value) || 0,
         temperature: parseFloat(measurement.temperature) || 0,
         flowRate: parseFloat(measurement.flowRate) || 0,
@@ -93,7 +94,8 @@ function DeviceCard({ device, onFetchData }) {
                 <p>Lade Messdaten...</p>
             ) : (
                 measurements.length > 0 ? (
-                    <CustomBarChart 
+                    <CustomBarChart
+                        key={valueData.key} 
                         values={valueData} 
                         label={`${selectedChart} (Einheit)`} 
                     />

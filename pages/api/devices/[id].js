@@ -56,7 +56,8 @@ export default async function handler(req, res) {
                     _id: { DeviceId: "$DeviceId", DeviceName: "$DeviceName" },
                     measurements: {
                         $push: {
-                            Date: "$Date",
+                            key: "$_id",
+                            date: "$Date",
                             value: "$value",
                             temperature: "$Temperature",
                             flowRate: "$FlowRate",
@@ -73,11 +74,10 @@ export default async function handler(req, res) {
                 }
             },
             {
-                // Sort the measurements by Date in ascending order
                 $unwind: "$measurements"
             },
             {
-                $sort: { "measurements.Date": 1 } // Ascending order
+                $sort: { "measurements.Date": 1 }
             },
             {
                 $group: {
@@ -88,6 +88,8 @@ export default async function handler(req, res) {
         ];
 
         const devices = await collection.aggregate(pipeline).toArray();
+
+        // console.log(devices[0].measurements)
 
         if (devices.length > 0) {
             return res.status(200).json({
