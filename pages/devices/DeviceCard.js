@@ -14,10 +14,11 @@ function DeviceCard({ device, onFetchData }) {
         setLoading(true);
         try {
             const response = await fetch(`/api/devices/${device.DeviceId}?selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`);
+            
             if (!response.ok) {
                 throw new Error('Fehler beim Abrufen der Messdaten: ' + response.statusText);
             }
-
+    
             const data = await response.json();
             setMeasurements(data.measurements || []);
             onFetchData();
@@ -27,6 +28,30 @@ function DeviceCard({ device, onFetchData }) {
             setLoading(false);
         }
     };
+    
+    const exportData = async () => {
+        try {
+            const response = await fetch(`/api/devices/export?deviceId=${device.DeviceId}&selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`, {
+                method: 'GET',
+            });
+    
+            if (!response.ok) {
+                throw new Error('Fehler beim Export der Daten: ' + response.statusText);
+            }
+    
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `device_${device.DeviceId}_data_${startDate}_to_${endDate}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Fehler beim Export der Daten:', error);
+        }
+    };
+    
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
@@ -107,6 +132,7 @@ function DeviceCard({ device, onFetchData }) {
                     />
                 </div>
                 <button onClick={() => navigateEndDateWeeks(1)}>&gt;</button>
+                <button onClick={exportData} className={styles.downloadButton}>Daten herunterladen</button>
             </div>
 
             {loading ? (
