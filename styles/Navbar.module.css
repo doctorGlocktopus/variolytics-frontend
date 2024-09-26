@@ -1,0 +1,36 @@
+/* Sidebar Styles */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    color: #333;
+    height: 100vh;
+    padding: 1rem;
+}
+
+.sidebar h2 {
+    margin: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* Navigation Links Styles */
+.navLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.navLinks a {
+    color: #333;
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.navLinks a:hover {
+    color: #00c49f; /* Change text color on hover */
+}
+
+.navLinks a:active {
+    color: #444; /* Change text color when active */
+}

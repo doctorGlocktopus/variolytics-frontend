@@ -1,0 +1,92 @@
+/* Container Styles */
+.container {
+    background-color: #f0f0f0;
+    min-height: 500px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: calc(20% - 20px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Device Table Styles */
+.deviceTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.deviceTable th, 
+.deviceTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.deviceTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deviceTable th:hover {
+    background-color: #e0e0e0;
+}
+
+.deviceTable tr:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+.deviceTable td {
+    font-size: 16px;
+}
+
+.deviceTable td[style] {
+    font-weight: bold;
+}
+
+/* Delete Button Styles */
+.deleteButton {
+    padding: 10px 20px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    background-color: #ff3333;
+}
+
+/* Search Input Styles */
+.searchInput {
+    margin: 20px 0;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.pagination button {
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #dddcdc;
+    border-radius: 5px;
+}
+
+.pagination button:hover {
+    background-color: #f0f0f0;
+}

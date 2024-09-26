@@ -1,0 +1,50 @@
+/* Login Form Styles */
+.loginForm {
+  display: flex;
+  justify-content: center;
+}
+
+.loginFormX {
+  display: flex;
+}
+
+/* Tab Container Styles */
+.tabContainer {
+  display: flex;
+  background-color: #f0f0f0;
+  gap: 10px;
+  justify-content: space-around;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.tabContainer button {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 15px;
+}
+
+.tabContainer button:hover {
+  background-color: #dddcdc;
+}
+
+/* Input Styles within Tab Container */
+.tabContainer input {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: #f0f0f0;
+}
+
+.tabContainer input:hover {
+  background-color: #dddcdc;
+}
+
+/* Main Container Styles */
+.mainContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
