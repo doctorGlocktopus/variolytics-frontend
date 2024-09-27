@@ -13,8 +13,8 @@ export function Login() {
     const dispatch = useDispatch();
     const username = useRef(null);
     const password = useRef(null);
-    const { currentUser, setCurrentUser } = useContext(AppContext);
-
+    const { setCurrentUser } = useContext(AppContext);
+    
     const login = async () => {
         try {
             const response = await fetch('/api/login', {
@@ -28,6 +28,11 @@ export function Login() {
 
             if (!response.ok) {
                 setError(`This is an HTTP error: The status is ${response.status}`);
+                const newNotification = {
+                    id: Date.now(),
+                    message: `Fehler beim Laden der Gerätedaten.`,
+                };
+                dispatch(addNotification(newNotification));
                 return;
             }
 

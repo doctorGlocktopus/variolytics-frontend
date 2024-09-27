@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import CustomBarChart from './CustomBarChart';
 import styles from '../../styles/Device.module.css';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../redux/notificationSlice';
 
 function DeviceCard({ device, onFetchData }) {
     const [selectedChart, setSelectedChart] = useState('N2O');
@@ -11,7 +13,8 @@ function DeviceCard({ device, onFetchData }) {
     const [endDate, setEndDate] = useState('2024-09-25');
     const deviceRef = useRef();
     const router = useRouter();
-    
+    const dispatch = useDispatch();
+
     const fetchMeasurements = async () => {
         setLoading(true);
         try {
@@ -26,6 +29,11 @@ function DeviceCard({ device, onFetchData }) {
             onFetchData();
         } catch (error) {
             console.error('Fehler beim Abrufen der Messdaten:', error);
+            const newNotification = {
+                id: Date.now(),
+                message: `Fehler beim Laden der Gerätedaten.`,
+            };
+            dispatch(addNotification(newNotification));
         } finally {
             setLoading(false);
         }
@@ -49,6 +57,11 @@ function DeviceCard({ device, onFetchData }) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            const newNotification = {
+                id: Date.now(),
+                message: `Export erfolgreich.`,
+            };
+            dispatch(addNotification(newNotification));
         } catch (error) {
             console.error('Fehler beim Export der Daten:', error);
         }

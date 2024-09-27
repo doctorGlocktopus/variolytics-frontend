@@ -1,12 +1,11 @@
 import styles from '../../styles/Device.module.css';
-import AppContext from "../../AppContext";
-import { useContext, useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState } from "react";
 import { useDispatch } from 'react-redux';
 import CustomBarChart from './CustomBarChart';
 import MiniChart from './MiniChart';
+import { addNotification } from '../../redux/notificationSlice';
 
 function DeviceDetails() {
-    const { currentUser } = useContext(AppContext);
     const dispatch = useDispatch();
 
     let [device, setDevice] = useState(null);
@@ -14,12 +13,10 @@ function DeviceDetails() {
     const [loading, setLoading] = useState(false);
     const [startDate, setStartDate] = useState('2024-09-01');
     const [endDate, setEndDate] = useState('2024-09-25');
-    const [error, setError] = useState(null);
     const deviceRef = useRef();
 
     const fetchDeviceDetails = async () => {
         setLoading(true);
-        setError(null);
         
         let urlID = `http://localhost:3000/api/devices/${window.location.pathname.split('/').pop()}?isLive=${true}&selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`;
 
@@ -35,13 +32,17 @@ function DeviceDetails() {
 
             const newNotification = {
                 id: Date.now(),
-                message: `Der Messung ${deviceData.measurements._id} wurde entfernt!`,
+                message: `Die Messung ${deviceData.measurements._id.DeviceId} wurde entfernt!`,
             };
             dispatch(addNotification(newNotification));
 
         } catch (error) {
             console.error("Fetch error:", error);
-            setError('Fehler beim Laden der Gerätedaten.');
+            const newNotification = {
+                id: Date.now(),
+                message: `Fehler beim Laden der Gerätedaten.`,
+            };
+            dispatch(addNotification(newNotification));
         } finally {
             setLoading(false);
         }

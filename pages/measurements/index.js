@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { getColor } from '../../utils/utils.js';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
+import { getCookie } from 'cookies-next';
 
 function ListPageComponent() {
     const { currentUser } = useContext(AppContext);
@@ -27,18 +28,28 @@ function ListPageComponent() {
     };
 
     useEffect(() => {
-        fetchDeviceDetails();
-        
-        const intervalId = setInterval(fetchDeviceDetails, 120000);
-        const newNotification = {
-            id: Date.now(),
-            message: `Gerät wurde aktuallisiert`,
-        };
-        dispatch(addNotification(newNotification));
-        
-        return () => clearInterval(intervalId);
-    }, [selectedChart, startDate, endDate]);
+        fetchDevices();
+    }, [page, sortColumn, sortDirection, searchTerm])
 
+    const delMeasure = async (MeasureId) => {
+        let jwt = getCookie("auth");
+        let urlID = `/api/measurements/${MeasureId}`;
+        const response = await fetch(urlID, {
+            method: 'DELETE',
+            headers: {
+                auth: jwt,
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        });
+        if (response.ok) {
+            const newNotification = {
+                id: Date.now(),
+                message: `Die Messung ${MeasureId} wurde entfernt!`,
+            };
+            dispatch(addNotification(newNotification));
+            fetchDevices();
+        }
+    };
 
     const sortDevices = (column) => {
         const direction = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';

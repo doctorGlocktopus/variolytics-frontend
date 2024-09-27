@@ -1,13 +1,11 @@
-import { useState } from 'react';
 import styles from '../../styles/Device.module.css';
 
 function MiniChart({ values }) {
-  const [chartType, setChartType] = useState('latest');
 
   const latestValues = values.reduce((acc, item) => {
     const date = new Date(item.date);
     const key = item.key;
-    
+
     if (!acc[key] || date > new Date(acc[key].date)) {
       acc[key] = {
         date: item.date,
@@ -24,18 +22,11 @@ function MiniChart({ values }) {
 
   const mostRecentValues = Object.values(latestValues).pop();
 
-  const toggleChartType = () => {
-    setChartType((prevType) => (prevType === 'latest' ? 'chart' : 'latest'));
-  };
-
   return (
     <div>
       <div className={styles.tabContainer}>
-        <button onClick={toggleChartType}>
-          {chartType === 'latest' ? 'Zu Diagramm wechseln' : 'Zu neuesten Werten wechseln'}
-        </button>
+
       </div>
-      {chartType === 'latest' ? (
         <div className={styles.latestValues}>
           <h3>Aktuelle Werte</h3>
           <ul>
@@ -47,10 +38,6 @@ function MiniChart({ values }) {
             <li>FlowRate: {mostRecentValues.flowRate} L/min</li>
           </ul>
         </div>
-      ) : (
-        <ResponsiveContainer width="100%" height={300}>
-        </ResponsiveContainer>
-      )}
     </div>
   );
 }

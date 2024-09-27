@@ -1,15 +1,15 @@
 import styles from '../../styles/Device.module.css';
-import { useContext, useEffect, useState } from "react";
-import AppContext from "../../AppContext";
+import { useEffect, useState } from "react";
 import DeviceCard from './DeviceCard';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../redux/notificationSlice';
 
 function ListPageComponent() {
-    const { currentUser } = useContext(AppContext);
     const [devices, setDevices] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const dispatch = useDispatch();
 
     const fetchDevices = async () => {
         setLoading(true);
@@ -24,6 +24,11 @@ function ListPageComponent() {
             }
         } catch (error) {
             console.error('Fehler beim Abrufen der Geräte:', error);
+            const newNotification = {
+                id: Date.now(),
+                message: `Fehler beim Abrufen der Geräte:`,
+            };
+            dispatch(addNotification(newNotification));
         } finally {
             setLoading(false);
         }
