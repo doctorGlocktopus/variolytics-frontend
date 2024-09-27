@@ -40,6 +40,18 @@
 }
 
 /* Button Styles */
+
+.deviceLink{
+  margin: 10px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.deviceLink :hover{
+  background-color: #dddcdc;
+}
+
 .deleteButton {
   margin-top: 20px;
   padding: 10px 20px;
@@ -91,6 +103,10 @@
   margin: 20px 0;
   border: 1px solid #ccc;
   padding: 10px;
+}
+
+.chartRow {
+  display: flex;
 }
 
 .chart-bar {
@@ -181,4 +197,36 @@
 .flexX {
   display: flex;
   flex-direction: column;
+}
+
+.latestValuesContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.valueCard {
+  background: #f8f8f8;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  font-size: 30px;
+  color: #ffa500;
+}
+
+.valueText {
+  margin-top: 10px;
+}
+
+.valueText span {
+  display: block;
+}
+
+.ch4Value {
+  color: red;
 }

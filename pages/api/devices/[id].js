@@ -17,6 +17,7 @@ async function connectToDatabase() {
 
 export default async function handler(req, res) {
     const { id } = req.query;
+    const { isLive } = req.query;
     const { selectedChart = 'N2O', startDate, endDate } = req.query;
 
     const today = new Date();
@@ -67,14 +68,14 @@ export default async function handler(req, res) {
                                 CO2: { value: "$CO2", unit: "Vol.%" },
                                 O2: { value: "$O2", unit: "Vol.%" }
                             } : {
-                                value: "$value",
-                                unit: selectedChart
+                                [selectedChart]: { value: `$${selectedChart}`, unit: selectedChart === 'N2O' || selectedChart === 'CH4' ? 'ppm' : 'Vol.%' }
                             },
                             temperature: "$Temperature",
                             flowRate: "$FlowRate",
                         }
                     }
                 }
+                
             },
             {
                 $project: {
@@ -101,9 +102,15 @@ export default async function handler(req, res) {
         const devices = await collection.aggregate(pipeline).toArray();
 
         if (devices.length > 0) {
-            return res.status(200).json({
-                measurements: devices[0].measurements,
-            });
+            if(isLive) {
+                return res.status(200).json({
+                    measurements: devices[0],
+                });
+            } else {
+                return res.status(200).json({
+                    measurements: devices[0].measurements,
+                });
+            }
         } else {
             return res.status(404).json({ error: 'Keine Messdaten gefunden für das Gerät' });
         }

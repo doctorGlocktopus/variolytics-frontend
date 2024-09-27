@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import CustomBarChart from './CustomBarChart';
 import styles from '../../styles/Device.module.css';
+import { useRouter } from 'next/router';
 
 function DeviceCard({ device, onFetchData }) {
     const [selectedChart, setSelectedChart] = useState('N2O');
@@ -9,7 +10,8 @@ function DeviceCard({ device, onFetchData }) {
     const [startDate, setStartDate] = useState('2024-09-01');
     const [endDate, setEndDate] = useState('2024-09-25');
     const deviceRef = useRef();
-
+    const router = useRouter();
+    
     const fetchMeasurements = async () => {
         setLoading(true);
         try {
@@ -76,10 +78,13 @@ function DeviceCard({ device, onFetchData }) {
 
     const valueData = measurements.reduce((acc, measurement) => {
         const { date, value, temperature, flowRate } = measurement;
+
+        console.log(measurement)
+
         acc.push({
             key: measurement.key,
             date,
-            value: selectedChart === 'all' ? value : (measurement[selectedChart] || 0),
+            value: selectedChart === 'all' ? value : (measurement.value || 0),
             temperature: parseFloat(temperature) || 0,
             flowRate: parseFloat(flowRate) || 0,
         });
@@ -100,9 +105,16 @@ function DeviceCard({ device, onFetchData }) {
         setEndDate(new Date(endDateObj.getTime() + (direction * weekInMilliseconds)).toISOString().split('T')[0]);
     };
 
+    
+    const handleMeasureClick = (id) => {
+        router.push(`/devices/${id}`);
+    };
+
     return (
         <div ref={deviceRef} className={styles.deviceCard}>
-            <h3>{device.DeviceName}</h3> 
+            <div>
+                <a className={styles.deviceLink}><h3 onClick={() => handleMeasureClick(device.DeviceId) }>{device.DeviceName}</h3></a>
+            </div>
 
             <div className={styles.tabContainer}>
                 <button onClick={() => setSelectedChart('all')} className={selectedChart === 'all' ? styles.activeTab : ''}>Alle (ppm)</button>

@@ -1,7 +1,6 @@
 import styles from '../../styles/Measurements.module.css';
 import { useRouter } from 'next/router';
 import AppContext from "../../AppContext";
-import { getCookie } from 'cookies-next';
 import { useContext, useEffect, useState } from "react";
 import { getColor } from '../../utils/utils.js';
 import { useDispatch } from 'react-redux';
@@ -28,31 +27,18 @@ function ListPageComponent() {
     };
 
     useEffect(() => {
-        fetchDevices();
-    }, [page, sortColumn, sortDirection, searchTerm]);
+        fetchDeviceDetails();
+        
+        const intervalId = setInterval(fetchDeviceDetails, 120000);
+        const newNotification = {
+            id: Date.now(),
+            message: `Gerät wurde aktuallisiert`,
+        };
+        dispatch(addNotification(newNotification));
+        
+        return () => clearInterval(intervalId);
+    }, [selectedChart, startDate, endDate]);
 
-    const delMeasure = async (MeasureId) => {
-        let jwt = getCookie("auth");
-        let urlID = `/api/measurements/${MeasureId}`;
-
-        const response = await fetch(urlID, {
-            method: 'DELETE',
-            headers: {
-                auth: jwt,
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        });
-
-        if (response.ok) {
-            const newNotification = {
-                id: Date.now(),
-                message: `Der Messung ${MeasureId} wurde entfernt!`,
-            };
-            dispatch(addNotification(newNotification));
-
-            fetchDevices();
-        }
-    };
 
     const sortDevices = (column) => {
         const direction = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';

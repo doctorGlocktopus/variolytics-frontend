@@ -27,7 +27,7 @@ function CustomBarChart({ values }) {
     const minutes = String(date.getMinutes()).padStart(2, '0');
   
     const formattedDate = `${day}/${month}/${year}, ${hours}:${minutes}`;
-    
+
     return {
       key: item.key,
       date: formattedDate,
