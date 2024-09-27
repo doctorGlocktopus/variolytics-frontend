@@ -4,11 +4,12 @@ import { useContext } from "react";
 import { getCookie } from 'cookies-next';
 import { getColor } from '../../utils/utils.js';
 import { useDispatch } from 'react-redux';
+import { addNotification } from '../../redux/notificationSlice';
 
 function DeviceDetails({ device }) {
     const { currentUser } = useContext(AppContext);
-    const dispatch = useDispatch(); // Dispatch zur Benachrichtigung
-
+    const dispatch = useDispatch();
+    
     const delMeasure = async (MeasureId) => {
         let jwt = getCookie("auth");
         let urlID = `/api/measurements/${MeasureId}`;

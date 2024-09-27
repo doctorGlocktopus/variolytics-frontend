@@ -8,22 +8,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Search Input Styles */
-.searchInput {
-    margin-bottom: 20px; /* Space below the input */
-    padding: 10px;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* Pagination Styles */
-.pagination {
-    display: flex;
-    justify-content: space-between; /* Space buttons evenly */
-    margin-bottom: 20px; /* Space below pagination */
-}
-
 /* Device Table Styles */
 .deviceTable {
     width: 100%;
@@ -57,17 +41,14 @@
     font-size: 16px;
 }
 
-/* Cursor Pointer Styles */
-.cursorPointer {
-    cursor: pointer;
-}
-
 /* Delete Button Styles */
 .deleteButton {
+    margin-right: 1%;
     padding: 10px 15px;
     background-color: #ff4d4d; /* Red background for delete button */
     color: white;
     border: none;
+    padding: 0.5rem 1rem ;  
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -86,6 +67,8 @@
 }
 
 .updateButton {
+    margin-right: 1%;
+    padding: 10px 15px;
     background-color: #4CAF50;
     color: white;              
     border: none;               

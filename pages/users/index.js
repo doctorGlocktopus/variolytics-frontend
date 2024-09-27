@@ -5,17 +5,28 @@ import AppContext from "../../AppContext";
 import { setCookie, getCookie } from 'cookies-next';
 import { useContext } from "react";
 
-function delUser(_id) {
+async function delUser(_id) {
     let jwt = getCookie("auth");
     let urlID = `/api/users/${_id}`;
 
-    fetch(urlID, {
-        method: 'DELETE',
-        headers: {
-            auth: jwt,
-            'Content-type': 'application/json; charset=UTF-8',
-        },
-    }).then(() => window.location.reload(false));
+    try {
+        const response = await fetch(urlID, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${jwt}`,
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Fehler beim Löschen des Benutzers');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }
 
 function ListPageComponent(props) {
@@ -27,16 +38,25 @@ function ListPageComponent(props) {
         router.push(`/users/${userId}`);
     };
 
+    const handleDeleteUser = async (userId) => {
+        try {
+            await delUser(userId);
+            window.location.reload();
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
     return (
         <div className={styles.container}>
             <h2>Benutzerliste</h2>
-            <table className={styles.userTable}>
+            <table  className={styles.deviceTable}>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Benutzername</th>
                         <th>Rolle</th>
-                        {currentUser?.admin && <th>Aktionen</th>} {/* Show actions column only for admin */}
+                        {currentUser?.admin && <th>Aktionen</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -47,7 +67,13 @@ function ListPageComponent(props) {
                             <td>{user.admin ? "Admin" : "User"}</td>
                             {currentUser?.admin && (
                                 <td>
-                                    <button className={styles.deleteButton} onClick={(e) => { e.stopPropagation(); delUser(user._id); }}>
+                                    <button 
+                                        className={styles.deleteButton} 
+                                        onClick={(e) => { 
+                                            e.stopPropagation(); 
+                                            handleDeleteUser(user._id); 
+                                        }}
+                                    >
                                         Löschen
                                     </button>
                                 </td>
@@ -60,9 +86,9 @@ function ListPageComponent(props) {
     );
 }
 
-export async function getStaticProps() {
-    const query = await fetch(`http://localhost:3000/api/users`);
-    const users = await query.json();
+export async function getServerSideProps() {
+    const response = await fetch(`http://localhost:3000/api/users`);
+    const users = await response.json();
 
     return { props: { users } };
 }

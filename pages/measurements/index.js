@@ -29,11 +29,11 @@ function ListPageComponent() {
 
     useEffect(() => {
         fetchDevices();
-    }, [page, sortColumn, sortDirection, searchTerm])
+    }, [page, sortColumn, sortDirection, searchTerm]);
 
-    const delMeasure = async (MeasureId) => {
+    const delMeasure = async (measureId) => {
         let jwt = getCookie("auth");
-        let urlID = `/api/measurements/${MeasureId}`;
+        let urlID = `/api/measurements/${measureId}`;
         const response = await fetch(urlID, {
             method: 'DELETE',
             headers: {
@@ -44,10 +44,16 @@ function ListPageComponent() {
         if (response.ok) {
             const newNotification = {
                 id: Date.now(),
-                message: `Die Messung ${MeasureId} wurde entfernt!`,
+                message: `Die Messung ${measureId} wurde entfernt!`,
             };
             dispatch(addNotification(newNotification));
             fetchDevices();
+        } else {
+            const errorNotification = {
+                id: Date.now(),
+                message: `Fehler beim Entfernen der Messung ${measureId}.`,
+            };
+            dispatch(addNotification(errorNotification));
         }
     };
 
@@ -58,8 +64,8 @@ function ListPageComponent() {
         router.push(`/measurements?page=1&sortBy=${column}&sortDirection=${direction}&searchTerm=${searchTerm}`);
     };
 
-    const handleMeasureClick = (MeasureId) => {
-        router.push(`/measurements/${MeasureId}`);
+    const handleMeasureClick = (measureId) => {
+        router.push(`/measurements/${measureId}`);
     };
 
     const totalPages = Math.ceil(totalDevices / limit);

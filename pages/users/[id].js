@@ -1,53 +1,17 @@
 import styles from '../../styles/User.module.css';
 import AppContext from "../../AppContext";
-import { useContext, useState, useEffect } from "react";
-import { getCookie } from 'cookies-next';
-import { useRouter } from 'next/router';
+import { useContext, useState } from "react";
+import { setCookie, getCookie } from 'cookies-next';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '../../redux/notificationSlice';
 
-function OneUser() {
-    const { currentUser } = useContext(AppContext);
-    const router = useRouter();
-    const { id } = router.query;
-    const [user, setUser] = useState(null);
+function OneUser({ user }) {
+    const { currentUser, setCurrentUser } = useContext(AppContext);
     const [isEditing, setIsEditing] = useState(false);
     const [updatedUser, setUpdatedUser] = useState({
-        username: '',
-        admin: 'false',
+        username: user?.username,
+        admin: user?.admin,
     });
-
-    const fetchUserData = async (userId) => {
-        try {
-            const jwt = getCookie("auth");
-            const urlID = `/api/users/${userId}`;
-
-            const response = await fetch(urlID, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'auth': jwt,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch user data");
-            }
-
-            const data = await response.json();
-            setUser(data);
-            setUpdatedUser({
-                username: data.username,
-                admin: data.admin.toString(),
-            });
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-        }
-    };
-
-    useEffect(() => {
-        if (id) {
-            fetchUserData(id);
-        }
-    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,122 +20,207 @@ function OneUser() {
             [name]: name === 'admin' ? value === 'true' : value
         }));
     };
-
-    const handleUpdate = async () => {
-        try {
-            const jwt = getCookie("auth");
-            const urlID = `/api/users/${id}`;
-
-            const response = await fetch(urlID, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'auth': jwt,
-                },
-                body: JSON.stringify(updatedUser),
-            });
-
-            if (!response.ok) {
-                const errorMessage = await response.text();
-                throw new Error(errorMessage);
-            }
-
-            const updatedUserData = await response.json();
-            console.log("User updated successfully:", updatedUserData);
-            setIsEditing(false);
-        } catch (error) {
-            console.error("Update error:", error);
+    async function handleUpdate() {
+        const jwt = getCookie("auth");
+        const urlID = `/api/users/update?id=${user._id}`;
+    
+        const response = await fetch(urlID, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'auth': jwt,
+            },
+            body: JSON.stringify(updatedUser),
+        });
+    
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            console.error("Update error:", errorMessage);
+            alert(`Update failed: ${errorMessage}`);
+            return;
         }
-    };
-
-    const delUser = async () => {
-        try {
-            const jwt = getCookie("auth");
-            const urlID = `/api/users/${id}`;
-
-            const response = await fetch(urlID, {
-                method: 'DELETE',
-                headers: {
-                    'auth': jwt,
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-            });
-
+    
+        const updatedUserData = await response.json();
+        setCurrentUser(updatedUserData.username);
+        localStorage.setItem("user", JSON.stringify(updatedUserData.username));
+        setUpdatedUser(updatedUserData);
+    }
+    
+    function delUser(_id) {
+        const jwt = getCookie("auth");
+        const urlID = `/api/users/update?id=${_id}`;
+    
+        fetch(urlID, {
+            method: 'DELETE',
+            headers: {
+                auth: jwt,
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+        .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to delete the user');
+                throw new Error('Network response was not ok');
             }
-
-            router.push('/users');
-        } catch (error) {
+            window.location.reload();
+        })
+        .catch(error => {
             console.error('There was a problem with the delete operation:', error);
-        }
-    };
+            alert(`Delete failed: ${error.message}`);
+        });
+    }    
 
-    if (!user) {
+    if (user?._id) {
+        return (
+            <div className={styles.deviceTable}>
+                <div>
+                    <h2>User: {user.username} Id: {user._id}</h2>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <tbody>
+                            <tr>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <label>Name:</label>
+                                </td>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        value={updatedUser.username}
+                                        onChange={handleChange}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            outline: 'none',
+                                            fontSize: '1rem',
+                                            width: '100%',
+                                        }}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <label>Email:</label>
+                                </td>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={updatedUser.email}
+                                        onChange={handleChange}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            outline: 'none',
+                                            fontSize: '1rem',
+                                            width: '100%',
+                                        }}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <label>Rolle:</label>
+                                </td>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <select
+                                        name="admin"
+                                        value={updatedUser.admin}
+                                        onChange={handleChange}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            outline: 'none',
+                                            fontSize: '1rem',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <option value="false">User</option>
+                                        <option value="true">Admin</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <label>Password:</label>
+                                </td>
+                                <td style={{ padding: '10px', border: '1px solid #ccc' }}>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        value={updatedUser.password}
+                                        onChange={handleChange}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            outline: 'none',
+                                            fontSize: '1rem',
+                                            width: '100%',
+                                        }}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+              
+                                    <td colSpan={2} style={{ padding: '10px', border: '1px solid #ccc', textAlign: 'right' }}>
+                                        <button onClick={handleUpdate} className={styles.updateButton}>
+                                            Ändern
+                                        </button>
+                                        <button onClick={() => delUser(user._id)} className={styles.deleteButton}>
+                                            Löschen
+                                        </button>
+                                    </td>
+              
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>        
+        );
+    } else {
         return (
             <nav className={styles.container}>
-                <h2>Loading...</h2>
+                <h2>Der User existiert nicht mehr</h2>
             </nav>
         );
     }
-
-    return (
-        <div className={styles.container}>
-            <div className={styles.post}>
-                <div className={styles.article}>
-                    <nav>
-                        <h2>Der User Nr. {user._id}</h2>
-                        <div className={styles.flexRunter}>
-                            <label>
-                                Name:
-                                <input
-                                    type="text"
-                                    name="username"
-                                    value={updatedUser.username}
-                                    onChange={handleChange}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        outline: 'none',
-                                        fontSize: '1rem',
-                                        width: '100%',
-                                    }}
-                                />
-                            </label>
-                            <label>
-                                Rolle:
-                                <select
-                                    name="admin"
-                                    value={updatedUser.admin}
-                                    onChange={handleChange}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        outline: 'none',
-                                        fontSize: '1rem',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <option value="false">User</option>
-                                    <option value="true">Admin</option>
-                                </select>
-                            </label>
-                            {currentUser?.admin && (
-                                <div>
-                                    <button onClick={handleUpdate} className={styles.updateButton}>
-                                        Ändern
-                                    </button>
-                                    <button onClick={delUser} className={styles.deleteButton}>
-                                        Löschen
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    );
 }
 
 export default OneUser;
+
+export async function getServerSideProps(ctx) {
+    const jwt = getCookie('auth', { req: ctx.req, res: ctx.res });
+
+    if (!jwt) {
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
+        };
+    }
+
+    let urlID = `http://localhost:3000/api/users/`;
+
+    try {
+        const response = await fetch(urlID, {
+            headers: {
+                auth: jwt,
+            },
+        });
+
+        if (!response.ok) {
+            return {
+                notFound: true,
+            };
+        }
+
+        const data = await response.json();
+
+        const filteredUser = data.filter(user => user._id === ctx.params.id);
+        
+        return { props: { user: filteredUser.length > 0 ? filteredUser[0] : null } };
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+        return { props: { user: null } };
+    }
+}
