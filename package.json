@@ -10,6 +10,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
     "@tinymce/tinymce-react": "^4.2.0",
+    "bcryptjs": "^2.4.3",
     "cookies-next": "^2.1.2",
     "date-fns": "^2.29.3",
     "gh-pages": "^4.0.0",

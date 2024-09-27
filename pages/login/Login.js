@@ -27,7 +27,6 @@ export function Login() {
             });
 
             if (!response.ok) {
-                setError(`This is an HTTP error: The status is ${response.status}`);
                 const newNotification = {
                     id: Date.now(),
                     message: `Fehler beim Laden der Gerätedaten.`,
@@ -51,7 +50,11 @@ export function Login() {
                 dispatch(addNotification(newNotification));
             } else {
                 setCurrentUser(null);
-                setError("Benutzername oder Passwort stimmen nicht");
+                const newNotification = {
+                    id: Date.now(),
+                    message: "Benutzername oder Passwort stimmen nicht.",
+                };
+                dispatch(addNotification(newNotification));
             }
         } catch (err) {
             dispatch(addNotification(err));

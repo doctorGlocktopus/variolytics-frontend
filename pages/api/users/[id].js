@@ -1,36 +1,60 @@
-import fs from 'fs';
-import path from 'path';
+import { MongoClient, ObjectId } from 'mongodb';
 
-export default function handler(req, res) {
-    const filePath = path.join(process.cwd(), 'data', 'users.json');
-    const fileData = fs.readFileSync(filePath);
-    const users = JSON.parse(fileData);
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
 
-    if (req.method === 'PUT') {
+export default async function handler(req, res) {
+    const { id } = req.query;
 
-        const { id } = req.query;
-        const updatedUser = req.body;
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid user ID format.' });
+    }
 
-        const userIndex = users.findIndex(user => String(user._id) === String(id));
-        if (userIndex === -1) {
-            return res.status(404).json({ message: 'User not found' });
+    try {
+        await client.connect();
+        const db = client.db('users');
+        const collection = db.collection('users');
+
+        if (req.method === 'GET') {
+            const user = await collection.findOne({ _id: new ObjectId(id) });
+
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            return res.status(200).json(user);
         }
 
-        users[userIndex] = { ...users[userIndex], ...updatedUser };
+        if (req.method === 'PUT') {
+            const updatedUser = req.body;
+            const result = await collection.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: updatedUser }
+            );
 
-        fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
+            if (result.matchedCount === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
 
-        return res.status(200).json(users[userIndex]);
+            return res.status(200).json({ message: 'User updated successfully' });
+        }
+
+        if (req.method === 'DELETE') {
+            const result = await collection.deleteOne({ _id: new ObjectId(id) });
+
+            if (result.deletedCount === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            return res.status(204).send();
+        }
+
+        res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
+        return res.status(405).end(`Method ${req.method} Not Allowed`);
+    } catch (error) {
+        console.error('Error handling request:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        await client.close();
     }
-
-    if (req.method === 'DELETE') {
-        const { id } = req.query;
-        const updatedUsers = users.filter(user => String(user._id) !== String(id));
-
-        fs.writeFileSync(filePath, JSON.stringify(updatedUsers, null, 2));
-
-        return res.status(204).send();
-    }
-
-    res.status(200).json(users);
 }

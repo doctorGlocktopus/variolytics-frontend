@@ -50,6 +50,7 @@ Eine einfache Benutzerverwaltungs-App, die es ermöglicht, Benutzer zu registrie
     neue Datenbank + Collection erstellen
     Werte eintragen mit:
     node scripts/generateMdbData.js
+    node scripts/generateUserMdbData.js
   
 
 ## Routenbeschreibung

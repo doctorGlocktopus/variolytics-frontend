@@ -1,22 +1,23 @@
-import fs from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
 import * as jose from 'jose';
+import bcrypt from 'bcryptjs';
 
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
 const secretKey = process.env.NEXT_PUBLIC_JWT_SECRET;
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { username, password } = req.body;
 
-        const filePath = path.join(process.cwd(), 'data', 'users.json');
+        try {
+            await client.connect();
+            const db = client.db('user_management');
+            const collection = db.collection('users');
 
-        const fileData = fs.readFileSync(filePath);
-        const users = JSON.parse(fileData);
+            const user = await collection.findOne({ username });
 
-        const user = users.find(u => u.username === username && u.password === password);
-
-        if (user) {
-            try {
+            if (user && await bcrypt.compare(password, user.password)) {
                 const accessToken = await new jose.SignJWT({ _id: user._id, username: user.username })
                     .setProtectedHeader({ alg: 'HS256' })
                     .setExpirationTime('2h')
@@ -30,11 +31,14 @@ export default async function handler(req, res) {
                     },
                     accessToken: accessToken,
                 });
-            } catch (error) {
-                res.status(500).json({ message: 'Fehler beim Erstellen des Tokens', error });
+            } else {
+                res.status(401).json({ message: 'Benutzername oder Passwort stimmen nicht' });
             }
-        } else {
-            res.status(401).json({ message: 'Benutzername oder Passwort stimmen nicht' });
+        } catch (error) {
+            console.error('Fehler beim Abrufen des Benutzers:', error);
+            res.status(500).json({ message: 'Interner Serverfehler', error });
+        } finally {
+            await client.close();
         }
     } else {
         res.status(405).json({ message: 'Nur POST-Methode erlaubt' });

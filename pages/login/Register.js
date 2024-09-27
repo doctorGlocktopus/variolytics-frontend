@@ -1,4 +1,4 @@
-import { useRef} from 'react';
+import { useRef } from 'react';
 import styles from '../../styles/Login.module.css';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
@@ -24,18 +24,19 @@ export default function Register() {
                             email: email.current.value,
                             admin: false,
                         }),
-                        headers: { 'Content-type': 'application/json; charset=UTF-8' },
+                        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
                     });
 
                     if (!res.ok) {
-                        throw new Error('Fehler beim Erstellen des Benutzers');
+                        const errorData = await res.json();
+                        throw new Error(errorData.message || 'Fehler beim Erstellen des Benutzers');
                     }
 
                     const data = await res.json();
 
                     const newNotification = {
                         id: Date.now(),
-                        message: `Der Benutzer ${username.current.value} wurde regestriert!`,
+                        message: `Der Benutzer ${username.current.value} wurde registriert!`,
                     };
                     dispatch(addNotification(newNotification));
 
@@ -47,7 +48,6 @@ export default function Register() {
                     dispatch(addNotification(newNotification));
                 }
             } else {
-                setError('Die Passwörter stimmen nicht überein');
                 const newNotification = {
                     id: Date.now(),
                     message: 'Die Passwörter stimmen nicht überein.',
@@ -55,7 +55,6 @@ export default function Register() {
                 dispatch(addNotification(newNotification));
             }
         } else {
-            setError('Das Passwort muss mindestens 5 Zeichen lang sein');
             const newNotification = {
                 id: Date.now(),
                 message: 'Das Passwort muss mindestens 5 Zeichen lang sein.',
@@ -73,7 +72,7 @@ export default function Register() {
                 </label>
 
                 <label>E-Mail Adresse:
-                    <input ref={email} required />
+                    <input ref={email} type="email" required />
                 </label>
 
                 <label>Passwort:
