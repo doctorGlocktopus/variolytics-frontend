@@ -22,11 +22,22 @@ function ListPageComponent() {
     const dispatch = useDispatch();
 
     const fetchDevices = async () => {
-        const response = await fetch(`/api/measurements?page=${page}&limit=${limit}&sortBy=${sortColumn}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`);
-        const data = await response.json();
-        setDevices(data.devices);
-        setTotalDevices(data.total);
+        try {
+            const response = await fetch(`/api/measurements?page=${page}&limit=${limit}&sortBy=${sortColumn}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`);
+            const data = await response.json();
+            if (response.ok) {
+                setDevices(data.devices || []);
+                setTotalDevices(data.total);
+            } else {
+                console.error('Error fetching devices:', data.error);
+                setDevices([]); 
+            }
+        } catch (error) {
+            console.error('Error fetching devices:', error);
+            setDevices([]);
+        }
     };
+    
 
     useEffect(() => {
         fetchDevices();

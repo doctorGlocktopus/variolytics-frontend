@@ -17,11 +17,14 @@ export default async function handler(req, res) {
         const db = client.db('measurements');
         const collection = db.collection('measurements');
 
+        // Define the match stage for the search
         const matchStage = {
             $or: [
-                { MeasureId: { $regex: searchTerm, $options: 'i' } },
                 { DeviceId: { $regex: searchTerm, $options: 'i' } },
-                { DeviceName: { $regex: searchTerm, $options: 'i' } }
+                { DeviceName: { $regex: searchTerm, $options: 'i' } },
+                { FlowRate: { $regex: searchTerm, $options: 'i' } }, // Assuming FlowRate can be a string
+                { IsActive: searchTerm === 'true' || searchTerm === 'false' ? { $eq: searchTerm === 'true' } : { $exists: true } }, // Handle boolean as string
+                { MeasureId: { $regex: searchTerm, $options: 'i' } }
             ]
         };
 
