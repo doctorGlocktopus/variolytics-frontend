@@ -46,9 +46,11 @@ function DeviceDetails() {
 
     useEffect(() => {
         fetchDeviceDetails();
-        
-        const intervalId = setInterval(fetchDeviceDetails, 120000);
-        
+
+        const intervalId = setInterval(() => {
+            fetchDeviceDetails();
+        }, 120000);
+
         return () => clearInterval(intervalId);
     }, [selectedChart, startDate, endDate]);
 

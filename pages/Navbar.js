@@ -74,11 +74,7 @@ export default function Navbar() {
                 ))}
                 {currentUser ? (
                     <a href="#" onClick={logout}>Logout</a>
-                ) : (
-                    <a href={routes.login.path}>
-                        {routes.login.text[language] || routes.login.text.de}
-                    </a>
-                )}
+                ) : <div></div>}
             </div>
         </nav>
     );
