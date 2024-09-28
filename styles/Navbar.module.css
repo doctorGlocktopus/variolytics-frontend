@@ -3,7 +3,6 @@
     display: flex;
     flex-direction: column;
     color: #333;
-    height: 100vh;
     padding: 1rem;
 }
 
@@ -17,6 +16,12 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    transition: max-height 0.3s ease-in-out; /* Smooth transition for height */
+    overflow: hidden; /* Hide overflow for animation effect */
+}
+
+.navLinks.show {
+    max-height: 500px; /* Set max-height to allow for transition */
 }
 
 .navLinks a {
@@ -41,9 +46,6 @@
 }
 
 .button {
-    position: absolute;
-    left: 0;
-    top: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     opacity: 1;
     transform: translateY(0);
@@ -57,4 +59,45 @@
     opacity: 0;
     transform: translateY(-10px);
     pointer-events: none;
+}
+
+.menuToggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .menuToggle {
+        display: block;
+        margin-bottom: 1rem;
+        background: #00c49f;
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1000;
+    }
+
+    .rowMenue {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .navLinks {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        position: absolute;
+        background: white;
+        width: 100%;
+        left: 0;
+        top: 0;
+        max-height: 0;
+        transition: max-height 0.3s ease-in-out;
+        overflow: hidden;
+    }
+
+    .navLinks.show {
+        max-height: 500px;
+    }
 }

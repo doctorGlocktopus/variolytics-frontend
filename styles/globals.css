@@ -33,3 +33,18 @@ a {
   width: 100%;
   padding: 1%;
 }
+/* Language switcher styles */
+.languageSwitcher {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
