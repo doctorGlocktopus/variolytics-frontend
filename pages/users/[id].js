@@ -1,16 +1,16 @@
 import styles from '../../styles/User.module.css';
 import AppContext from "../../AppContext";
 import { useContext, useState } from "react";
-import { setCookie, getCookie } from 'cookies-next';
-import { useDispatch } from 'react-redux';
-import { addNotification } from '../../redux/notificationSlice';
+import { getCookie } from 'cookies-next';
+import routes from '../../locales/users.js';
 
 function OneUser({ user }) {
-    const { currentUser, setCurrentUser } = useContext(AppContext);
-    const [isEditing, setIsEditing] = useState(false);
+    const { currentUser, setCurrentUser, language } = useContext(AppContext);
     const [updatedUser, setUpdatedUser] = useState({
         username: user?.username,
         admin: user?.admin,
+        email: user?.email, 
+        password: '',
     });
 
     const handleChange = (e) => {
@@ -20,6 +20,7 @@ function OneUser({ user }) {
             [name]: name === 'admin' ? value === 'true' : value
         }));
     };
+
     async function handleUpdate() {
         const jwt = getCookie("auth");
         const urlID = `/api/users/update?id=${user._id}`;
@@ -73,12 +74,12 @@ function OneUser({ user }) {
         return (
             <div className={styles.deviceTable}>
                 <div>
-                    <h2>User: {user.username} Id: {user._id}</h2>
+                    <h2>{routes.userDetail.title[language]}: {user.username} Id: {user._id}</h2>
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                         <tbody>
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
-                                    <label>Name:</label>
+                                    <label>{routes.userDetail.labels.name[language]}</label>
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
                                     <input
@@ -98,7 +99,7 @@ function OneUser({ user }) {
                             </tr>
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
-                                    <label>Email:</label>
+                                    <label>{routes.userDetail.labels.email[language]}</label>
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
                                     <input
@@ -118,7 +119,7 @@ function OneUser({ user }) {
                             </tr>
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
-                                    <label>Rolle:</label>
+                                    <label>{routes.userDetail.labels.role[language]}</label>
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
                                     <select
@@ -133,14 +134,14 @@ function OneUser({ user }) {
                                             width: '100%',
                                         }}
                                     >
-                                        <option value="false">User</option>
-                                        <option value="true">Admin</option>
+                                        <option value="false">{routes.userDetail.labels.user[language]}</option>
+                                        <option value="true">{routes.userDetail.labels.admin[language]}</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
-                                    <label>Password:</label>
+                                    <label>{routes.userDetail.labels.password[language]}</label>
                                 </td>
                                 <td style={{ padding: '10px', border: '1px solid #ccc' }}>
                                     <input
@@ -159,16 +160,14 @@ function OneUser({ user }) {
                                 </td>
                             </tr>
                             <tr>
-              
-                                    <td colSpan={2} style={{ padding: '10px', border: '1px solid #ccc', textAlign: 'right' }}>
-                                        <button onClick={handleUpdate} className={styles.updateButton}>
-                                            Ändern
-                                        </button>
-                                        <button onClick={() => delUser(user._id)} className={styles.deleteButton}>
-                                            Löschen
-                                        </button>
-                                    </td>
-              
+                                <td colSpan={2} style={{ padding: '10px', border: '1px solid #ccc', textAlign: 'right' }}>
+                                    <button onClick={handleUpdate} className={styles.updateButton}>
+                                        {routes.userDetail.labels.update[language]}
+                                    </button>
+                                    <button onClick={() => delUser(user._id)} className={styles.deleteButton}>
+                                        {routes.userDetail.labels.delete[language]}
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -178,7 +177,7 @@ function OneUser({ user }) {
     } else {
         return (
             <nav className={styles.container}>
-                <h2>Der User existiert nicht mehr</h2>
+                <h2>{routes.userDetail.labels.notFound[language]}</h2>
             </nav>
         );
     }

@@ -6,9 +6,10 @@ import { getColor } from '../../utils/utils.js';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
 import { getCookie } from 'cookies-next';
+import routes from '../../locales/measurements.js'; 
 
 function ListPageComponent() {
-    const { currentUser } = useContext(AppContext);
+    const { currentUser, language } = useContext(AppContext);
     const router = useRouter();
     const { page: pageQuery } = router.query;
     const [devices, setDevices] = useState([]);
@@ -79,31 +80,31 @@ function ListPageComponent() {
         <div className={styles.container}>
             <input 
                 type="text" 
-                placeholder="Suche..." 
+                placeholder={routes.measurements.searchPlaceholder[language]}
                 value={searchTerm} 
                 onChange={(e) => setSearchTerm(e.target.value)} 
                 className={styles.searchInput}
             />
             <div className={styles.pagination}>
-                <button onClick={() => changePage(page - 1)} disabled={page === 1}>Vorherige</button>
+                <button onClick={() => changePage(page - 1)} disabled={page === 1}>{routes.measurements.previous[language]}</button>
                 <span>Seite {page} von {totalPages}</span>
-                <button onClick={() => changePage(page + 1)} disabled={page === totalPages}>Nächste</button>
+                <button onClick={() => changePage(page + 1)} disabled={page === totalPages}>{routes.measurements.next[language]}</button>
             </div>
             <table className={styles.deviceTable}>
                 <thead>
                     <tr>
-                        <th onClick={() => sortDevices('MeasureId')}>Messungs ID</th>
-                        <th onClick={() => sortDevices('DeviceId')}>Geräte ID</th>
-                        <th onClick={() => sortDevices('DeviceName')}>Gerätename</th>
-                        <th onClick={() => sortDevices('N2O')}>N2O (ppm)</th>
-                        <th onClick={() => sortDevices('CH4')}>CH4 (ppm)</th>
-                        <th onClick={() => sortDevices('CO2')}>CO2 (Vol.%))</th>
-                        <th onClick={() => sortDevices('O2')}>O2 (Vol.%))</th>
-                        <th onClick={() => sortDevices('FlowRate')}>Durchflussrate (m³/h)</th>
-                        <th onClick={() => sortDevices('Temperature')}>Temperatur (°C)</th>
-                        <th onClick={() => sortDevices('Date')}>Datum</th>
-                        <th onClick={() => sortDevices('IsActive')}>Status</th>
-                        {currentUser?.admin && <th>Aktionen</th>}
+                        <th onClick={() => sortDevices('MeasureId')}>{routes.measurements.columns.measureId[language]}</th>
+                        <th onClick={() => sortDevices('DeviceId')}>{routes.measurements.columns.deviceId[language]}</th>
+                        <th onClick={() => sortDevices('DeviceName')}>{routes.measurements.columns.deviceName[language]}</th>
+                        <th onClick={() => sortDevices('N2O')}>{routes.measurements.columns.n2o[language]}</th>
+                        <th onClick={() => sortDevices('CH4')}>{routes.measurements.columns.ch4[language]}</th>
+                        <th onClick={() => sortDevices('CO2')}>{routes.measurements.columns.co2[language]}</th>
+                        <th onClick={() => sortDevices('O2')}>{routes.measurements.columns.o2[language]}</th>
+                        <th onClick={() => sortDevices('FlowRate')}>{routes.measurements.columns.flowRate[language]}</th>
+                        <th onClick={() => sortDevices('Temperature')}>{routes.measurements.columns.temperature[language]}</th>
+                        <th onClick={() => sortDevices('Date')}>{routes.measurements.columns.date[language]}</th>
+                        <th onClick={() => sortDevices('IsActive')}>{routes.measurements.columns.status[language]}</th>
+                        {currentUser?.admin && <th>{routes.measurements.columns.actions[language]}</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -119,10 +120,10 @@ function ListPageComponent() {
                             <td style={{ color: getColor(device.FlowRate, 5000) }}>{device.FlowRate}</td>
                             <td style={{ color: getColor(device.Temperature, 100) }}>{device.Temperature}</td>
                             <td>{new Date(device.Date).toLocaleString()}</td>
-                            <td>{device.IsActive ? "Aktiv" : "Inaktiv"}</td>
+                            <td>{device.IsActive ? routes.measurements.columns.active[language] : routes.measurements.columns.inactive[language]}</td>
                             {currentUser?.admin && (
                                 <td>
-                                    <button className={styles.deleteButton} onClick={(e) => { e.stopPropagation(); delMeasure(device.MeasureId); }}>Löschen</button>
+                                    <button className={styles.deleteButton} onClick={(e) => { e.stopPropagation(); delMeasure(device.MeasureId); }}>{routes.measurements.columns.delete[language]}</button>
                                 </td>
                             )}
                         </tr>

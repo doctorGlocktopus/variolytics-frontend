@@ -15,6 +15,16 @@
     justify-content: space-between;
     align-items: center;
     animation: slideIn 0.3s ease;
+    animation: slideOut 10.3s ease;
+}
+
+#close-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    text-decoration: none;
+    color: #d9534f;
+    font-weight: bold;
 }
 
 @keyframes slideIn {
@@ -25,5 +35,14 @@
     to {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
     }
 }

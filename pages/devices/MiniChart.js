@@ -1,7 +1,6 @@
 import styles from '../../styles/Device.module.css';
 
 function MiniChart({ values }) {
-
   const latestValues = values.reduce((acc, item) => {
     const date = new Date(item.date);
     const key = item.key;
@@ -22,22 +21,29 @@ function MiniChart({ values }) {
 
   const mostRecentValues = Object.values(latestValues).pop();
 
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('de-DE', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
   return (
     <div>
       <div className={styles.tabContainer}>
-
+        {/* Hier könnte weiterer Code stehen */}
       </div>
-        <div className={styles.latestValues}>
-          <h3>Aktuelle Werte</h3>
-          <ul>
-            <li>N2O: {mostRecentValues.N2O} ppm</li>
-            <li>CH4: {mostRecentValues.CH4} ppm</li>
-            <li>CO2: {mostRecentValues.CO2} Vol. %</li>
-            <li>O2: {mostRecentValues.O2} Vol. %</li>
-            <li>Temperatur: {mostRecentValues.temperature} °C</li>
-            <li>FlowRate: {mostRecentValues.flowRate} L/min</li>
-          </ul>
-        </div>
+      <div className={styles.latestValues}>
+        <h3>{formattedDate}</h3> {/* Datum anzeigen */}
+        <ul>
+          <li>N2O: {mostRecentValues.N2O} ppm</li>
+          <li>CH4: {mostRecentValues.CH4} ppm</li>
+          <li>CO2: {mostRecentValues.CO2} Vol. %</li>
+          <li>O2: {mostRecentValues.O2} Vol. %</li>
+          <li>Temperatur: {mostRecentValues.temperature} °C</li>
+          <li>FlowRate: {mostRecentValues.flowRate} L/min</li>
+        </ul>
+      </div>
     </div>
   );
 }

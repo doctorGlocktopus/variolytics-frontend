@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
   BarChart,
   Bar,
@@ -13,9 +13,12 @@ import {
 } from 'recharts';
 import { formatDate } from '../../utils/utils.js';
 import styles from '../../styles/Device.module.css';
+import AppContext from '../../AppContext';
+import routes from '../../locales/customBarChart.js';
 
 function CustomBarChart({ values }) {
   const [chartType, setChartType] = useState('line');
+  const { language } = useContext(AppContext) || { language: 'de' };
 
   const data = values.map((item) => {
     const date = new Date(item.date);
@@ -50,7 +53,7 @@ function CustomBarChart({ values }) {
     <div>
       <div className={styles.tabContainer}>
         <button onClick={toggleChartType}>
-          {chartType === 'bar' ? 'Zu Liniendiagramm wechseln' : 'Zu Balkendiagramm wechseln'}
+          {chartType === 'bar' ? routes.customBarChart.switchToLine[language] : routes.customBarChart.switchToBar[language]}
         </button>
       </div>
       <ResponsiveContainer width="100%" height={300}>

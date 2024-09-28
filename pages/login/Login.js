@@ -8,13 +8,16 @@ import { setCookie } from 'cookies-next';
 import Router from "next/router";
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
+import routes from '../../locales/login';
 
 export function Login() {
     const dispatch = useDispatch();
     const username = useRef(null);
     const password = useRef(null);
-    const { setCurrentUser } = useContext(AppContext);
-    
+    const { setCurrentUser, language } = useContext(AppContext);
+
+    const getText = (key) => routes.login[key][language] || routes.login[key].en;
+
     const login = async () => {
         try {
             const response = await fetch('/api/login', {
@@ -29,7 +32,7 @@ export function Login() {
             if (!response.ok) {
                 const newNotification = {
                     id: Date.now(),
-                    message: `Fehler beim Laden der Gerätedaten.`,
+                    message: getText('errorMessage'),
                 };
                 dispatch(addNotification(newNotification));
                 return;
@@ -45,14 +48,14 @@ export function Login() {
 
                 const newNotification = {
                     id: Date.now(),
-                    message: 'Erfolgreich eingeloggt!',
+                    message: getText('exportSuccess'),
                 };
                 dispatch(addNotification(newNotification));
             } else {
                 setCurrentUser(null);
                 const newNotification = {
                     id: Date.now(),
-                    message: "Benutzername oder Passwort stimmen nicht.",
+                    message: getText('invalidCredentials'),
                 };
                 dispatch(addNotification(newNotification));
             }
@@ -63,18 +66,18 @@ export function Login() {
 
     return (
         <div>
-            <h1>Login</h1>
-            <form  className={styles.form} onSubmit={(e) => {
+            <h1>{getText('title')}</h1>
+            <form className={styles.form} onSubmit={(e) => {
                 e.preventDefault();
                 login();
-            }} >
-                <label>Benutzername:
+            }}>
+                <label>{getText('usernameLabel')}
                     <input ref={username} required />
                 </label>
-                <label>Passwort:
+                <label>{getText('passwordLabel')}
                     <input type="password" ref={password} required />
                 </label>
-                <button type="submit">Einloggen</button>
+                <button type="submit">{getText('loginButton')}</button>
             </form>
         </div>
     );

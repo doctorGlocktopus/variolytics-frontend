@@ -1,12 +1,15 @@
-import styles from '../../styles/Device.module.css';
-import {useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { useDispatch } from 'react-redux';
+import styles from '../../styles/Device.module.css';
 import CustomBarChart from './CustomBarChart';
 import MiniChart from './MiniChart';
 import { addNotification } from '../../redux/notificationSlice';
+import AppContext from '../../AppContext';
+import routes from '../../locales/devices.js';
 
 function DeviceDetails() {
     const dispatch = useDispatch();
+    const { language } = useContext(AppContext);
 
     let [device, setDevice] = useState(null);
     const [selectedChart, setSelectedChart] = useState('N2O');
@@ -17,30 +20,23 @@ function DeviceDetails() {
 
     const fetchDeviceDetails = async () => {
         setLoading(true);
-        
+
         let urlID = `http://localhost:3000/api/devices/${window.location.pathname.split('/').pop()}?isLive=${true}&selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`;
 
         try {
             const response = await fetch(urlID);
 
             if (!response.ok) {
-                throw new Error('Gerät nicht gefunden oder Fehler beim Abrufen der Daten.');
+                throw new Error(routes.deviceCard.errorMessage[language] || "Device not found or error fetching data.");
             }
 
             const deviceData = await response.json();
             setDevice(deviceData);
-
-            const newNotification = {
-                id: Date.now(),
-                message: `Die Messung ${deviceData.measurements._id.DeviceId} wurde entfernt!`,
-            };
-            dispatch(addNotification(newNotification));
-
         } catch (error) {
             console.error("Fetch error:", error);
             const newNotification = {
                 id: Date.now(),
-                message: `Fehler beim Laden der Gerätedaten.`,
+                message: `${routes.deviceCard.errorMessage[language] || "Error loading device data."}`,
             };
             dispatch(addNotification(newNotification));
         } finally {
@@ -56,14 +52,11 @@ function DeviceDetails() {
         return () => clearInterval(intervalId);
     }, [selectedChart, startDate, endDate]);
 
-
-    
     if (!device) {
-        return <p>Lade Gerätedaten...</p>;
+        return <p>{routes.deviceCard.loadingData[language] || "Loading device data..."}</p>;
     }
 
-
-    const valueData = device.measurements.measurements.map(item=> {
+    const valueData = device.measurements.measurements.map(item => {
         return {
             key: item.key,
             date: item.date,
@@ -71,21 +64,20 @@ function DeviceDetails() {
             temperature: parseFloat(item.temperature) || 0,
             flowRate: parseFloat(item.flowRate) || 0,
         };
+    });
 
-    })
-
-    device = device.measurements._id
+    device = device.measurements._id;
 
     const exportData = async () => {
         try {
             const response = await fetch(`/api/devices/export?deviceId=${device.DeviceId}&selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`, {
                 method: 'GET',
             });
-    
+
             if (!response.ok) {
-                throw new Error('Fehler beim Export der Daten: ' + response.statusText);
+                throw new Error(routes.deviceCard.errorMessage[language] || 'Error exporting data: ' + response.statusText);
             }
-    
+
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -95,82 +87,89 @@ function DeviceDetails() {
             link.click();
             document.body.removeChild(link);
         } catch (error) {
-            console.error('Fehler beim Export der Daten:', error);
+            console.error('Error exporting data:', error);
         }
     };
 
     const navigateStartDateWeeks = (direction) => {
         const startDateObj = new Date(startDate);
         const weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
-
         setStartDate(new Date(startDateObj.getTime() + (direction * weekInMilliseconds)).toISOString().split('T')[0]);
     };
 
     const navigateEndDateWeeks = (direction) => {
         const endDateObj = new Date(endDate);
         const weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
-
         setEndDate(new Date(endDateObj.getTime() + (direction * weekInMilliseconds)).toISOString().split('T')[0]);
     };
 
-    console.log(valueData)
-    
     return (
         <div ref={deviceRef} className={styles.deviceCard}>
             <div className={styles.container} ref={deviceRef}>
-                <h2>Gerät Nr. {device.DeviceId}</h2>
-                <h3>Gerätename: {device.DeviceName}</h3>
+                <h2>{`${routes.deviceCard.deviceLabel[language] || "Device"} ${device.DeviceId}`}</h2>
+                <h3>{`${routes.deviceCard.deviceNameLabel[language] || "Device Name"}: ${device.DeviceName}`}</h3>
 
                 <div className={styles.tabContainer}>
-                    <button onClick={() => setSelectedChart('all')} className={selectedChart === 'all' ? styles.activeTab : ''}>Alle (ppm)</button>
-                    <button onClick={() => setSelectedChart('N2O')} className={selectedChart === 'N2O' ? styles.activeTab : ''}>N2O (ppm)</button>
-                    <button onClick={() => setSelectedChart('CH4')} className={selectedChart === 'CH4' ? styles.activeTab : ''}>CH4 (ppm)</button>
-                    <button onClick={() => setSelectedChart('CO2')} className={selectedChart === 'CO2' ? styles.activeTab : ''}>CO2 (Vol.%)</button>
-                    <button onClick={() => setSelectedChart('O2')} className={selectedChart === 'O2' ? styles.activeTab : ''}>O2 (Vol.%)</button>
+                    <button onClick={() => setSelectedChart('all')} className={selectedChart === 'all' ? styles.activeTab : ''}>
+                        {routes.deviceCard.all[language] || "All (ppm)"}
+                    </button>
+                    <button onClick={() => setSelectedChart('N2O')} className={selectedChart === 'N2O' ? styles.activeTab : ''}>
+                        {routes.deviceCard.n2o[language] || "N2O (ppm)"}
+                    </button>
+                    <button onClick={() => setSelectedChart('CH4')} className={selectedChart === 'CH4' ? styles.activeTab : ''}>
+                        {routes.deviceCard.ch4[language] || "CH4 (ppm)"}
+                    </button>
+                    <button onClick={() => setSelectedChart('CO2')} className={selectedChart === 'CO2' ? styles.activeTab : ''}>
+                        {routes.deviceCard.co2[language] || "CO2 (Vol.)"}
+                    </button>
+                    <button onClick={() => setSelectedChart('O2')} className={selectedChart === 'O2' ? styles.activeTab : ''}>
+                        {routes.deviceCard.o2[language] || "O2 (Vol.)"}
+                    </button>
 
-                    <button onClick={() => navigateStartDateWeeks(-1)}>&lt;</button>
+                    <button onClick={() => navigateStartDateWeeks(-1)}>{routes.deviceCard.previousWeek[language] || "<"}</button>
                     <div className={styles.flexX}>
-                        <label>Startdatum:</label>
-                        <input 
-                        type="date" 
-                        value={startDate} 
-                        onChange={(e) => setStartDate(e.target.value)} 
-                    />
-                    </div>
-                    <button onClick={() => navigateStartDateWeeks(1)}>&gt;</button>
-
-                    <button onClick={() => navigateEndDateWeeks(-1)}>&lt;</button>
-                    <div className={styles.flexX}>
-                        <label>Enddatum:</label>
-                        <input 
-                            type="date" 
-                            value={endDate} 
-                            onChange={(e) => setEndDate(e.target.value)} 
+                        <label>{routes.deviceCard.startDate[language] || "Start Date:"}</label>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
                         />
                     </div>
-                    <button onClick={() => navigateEndDateWeeks(1)}>&gt;</button>
-                    <button onClick={exportData} className={styles.downloadButton}>Daten herunterladen</button>
+                    <button onClick={() => navigateStartDateWeeks(1)}>{routes.deviceCard.nextWeek[language] || ">"}</button>
+
+                    <button onClick={() => navigateEndDateWeeks(-1)}>{routes.deviceCard.previousWeek[language] || "<"}</button>
+                    <div className={styles.flexX}>
+                        <label>{routes.deviceCard.endDate[language] || "End Date:"}</label>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
+                    </div>
+                    <button onClick={() => navigateEndDateWeeks(1)}>{routes.deviceCard.nextWeek[language] || ">"}</button>
+                    <button onClick={exportData} className={styles.downloadButton}>
+                        {routes.deviceCard.downloadData[language] || "Download Data"}
+                    </button>
                 </div>
-        
+
                 {valueData.length > 0 ? (
                     <div>
                         <CustomBarChart
                             values={valueData}
-                            label={`Messdaten (Einheit)`} 
+                            label={`Messdaten (Einheit)`}
                         />
                         <MiniChart
                             values={valueData}
-                            label={`Messdaten (Einheit)`} 
+                            label={`Messdaten (Einheit)`}
                         />
                     </div>
 
                 ) : (
-                    <p>Keine Messdaten verfügbar</p>
+                    <p>{routes.deviceCard.noDataAvailable[language] || "No measurement data available."}</p>
                 )}
             </div>
         </div>
     );
-    
 }
 
 export default DeviceDetails;

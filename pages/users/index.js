@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import AppContext from "../../AppContext";
 import { setCookie, getCookie } from 'cookies-next';
 import { useContext } from "react";
+import routes from '../../locales/users.js';
 
 async function delUser(_id) {
     let jwt = getCookie("auth");
@@ -30,7 +31,7 @@ async function delUser(_id) {
 }
 
 function ListPageComponent(props) {
-    const { currentUser } = useContext(AppContext);
+    const { currentUser, language } = useContext(AppContext);
     const router = useRouter();
 
     const handleUserClick = (userId) => {
@@ -49,14 +50,14 @@ function ListPageComponent(props) {
 
     return (
         <div className={styles.container}>
-            <h2>Benutzerliste</h2>
-            <table  className={styles.deviceTable}>
+            <h2>{routes.userList.title[language]}</h2>
+            <table className={styles.deviceTable}>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Benutzername</th>
-                        <th>Rolle</th>
-                        {currentUser?.admin && <th>Aktionen</th>}
+                        <th>{routes.userList.headers.id[language]}</th>
+                        <th>{routes.userList.headers.username[language]}</th>
+                        <th>{routes.userList.headers.role[language]}</th>
+                        {currentUser?.admin && <th>{routes.userList.headers.actions[language]}</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -64,7 +65,7 @@ function ListPageComponent(props) {
                         <tr key={user._id} className={styles.cursorPointer} onClick={() => handleUserClick(user._id)}>
                             <td>{user._id}</td>
                             <td>{user.username}</td>
-                            <td>{user.admin ? "Admin" : "User"}</td>
+                            <td>{user.admin ? routes.userList.headers.admin[language] : routes.userList.headers.user[language]}</td>
                             {currentUser?.admin && (
                                 <td>
                                     <button 
@@ -74,7 +75,7 @@ function ListPageComponent(props) {
                                             handleDeleteUser(user._id); 
                                         }}
                                     >
-                                        Löschen
+                                        {routes.userList.headers.delete[language]}
                                     </button>
                                 </td>
                             )}

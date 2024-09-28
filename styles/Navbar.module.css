@@ -28,9 +28,33 @@
 }
 
 .navLinks a:hover {
-    color: #00c49f; /* Change text color on hover */
+    color: #00c49f;
 }
 
 .navLinks a:active {
-    color: #444; /* Change text color when active */
+    color: #444;
+}
+
+.languageSwitcher {
+    position: relative;
+    width: 100px;
+}
+
+.button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
 }

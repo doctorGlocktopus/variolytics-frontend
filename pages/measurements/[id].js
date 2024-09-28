@@ -5,9 +5,10 @@ import { getCookie } from 'cookies-next';
 import { getColor } from '../../utils/utils.js';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
+import routes from '../../locales/measurements.js'; 
 
 function DeviceDetails({ device }) {
-    const { currentUser } = useContext(AppContext);
+    const { currentUser, language } = useContext(AppContext);
     const dispatch = useDispatch();
     
     const delMeasure = async (MeasureId) => {
@@ -33,52 +34,52 @@ function DeviceDetails({ device }) {
     if (device?.MeasureId) {
         return (
             <div className={styles.container}>
-                <h2>Messungsnummer Nr. {device.MeasureId}</h2>
-                <h2>Gerät Nr. {device.DeviceId}</h2>
-                <h3>Gerätename: {device.DeviceName}</h3>
+                <h2>{routes.deviceDetails.title[language]} {device.MeasureId}</h2>
+                <h2>{routes.deviceDetails.deviceId[language]} {device.DeviceId}</h2>
+                <h3>{routes.deviceDetails.deviceName[language]} {device.DeviceName}</h3>
                 {currentUser?.admin && (
                     <div onClick={() => delMeasure(device.MeasureId)}>
-                        <button className={styles.deleteButton}>Messung löschen</button>
+                        <button className={styles.deleteButton}>{routes.deviceDetails.deleteButton[language]}</button>
                     </div>
                 )}
                 <table className={styles.deviceTable}>
                     <thead>
                         <tr>
-                            <th>Messwert</th>
-                            <th>Wert</th>
+                            <th>{routes.deviceDetails.tableHeaders.measurement[language]}</th>
+                            <th>{routes.deviceDetails.tableHeaders.value[language]}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>N2O (ppm)</td>
+                            <td>{routes.deviceDetails.tableHeaders.n2o[language]}</td>
                             <td style={{ color: getColor(device.N2O, 50) }}>{device.N2O}</td>
                         </tr>
                         <tr>
-                            <td>CH4 (ppm)</td>
+                            <td>{routes.deviceDetails.tableHeaders.ch4[language]}</td>
                             <td style={{ color: getColor(device.CH4, 100) }}>{device.CH4}</td>
                         </tr>
                         <tr>
-                            <td>CO2 (Vol.%):</td>
+                            <td>{routes.deviceDetails.tableHeaders.co2[language]}</td>
                             <td style={{ color: getColor(device.CO2, 20) }}>{device.CO2}</td>
                         </tr>
                         <tr>
-                            <td>O2 (Vol.%):</td>
+                            <td>{routes.deviceDetails.tableHeaders.o2[language]}</td>
                             <td style={{ color: getColor(device.O2, 100) }}>{device.O2}</td>
                         </tr>
                         <tr>
-                            <td>Durchflussrate (m³/h):</td>
+                            <td>{routes.deviceDetails.tableHeaders.flowRate[language]}</td>
                             <td style={{ color: getColor(device.FlowRate, 5000) }}>{device.FlowRate}</td>
                         </tr>
                         <tr>
-                            <td>Temperatur (°C):</td>
+                            <td>{routes.deviceDetails.tableHeaders.temperature[language]}</td>
                             <td style={{ color: getColor(device.Temperature, 100) }}>{device.Temperature}</td>
                         </tr>
                         <tr>
-                            <td>Status:</td>
-                            <td>{device.IsActive ? "Aktiv" : "Inaktiv"}</td>
+                            <td>{routes.deviceDetails.tableHeaders.status[language]}</td>
+                            <td>{device.IsActive ? routes.deviceDetails.active[language] : routes.deviceDetails.inactive[language]}</td>
                         </tr>
                         <tr>
-                            <td>Datum:</td>
+                            <td>{routes.deviceDetails.tableHeaders.date[language]}</td>
                             <td>{new Date(device.Date).toLocaleString()}</td>
                         </tr>
                     </tbody>
@@ -88,7 +89,7 @@ function DeviceDetails({ device }) {
     } else {
         return (
             <nav className={styles.container}>
-                <h2>Das Gerät existiert nicht mehr</h2>
+                <h2>{routes.deviceDetails.notFound[language]}</h2> {/* Gerät existiert nicht mehr */}
             </nav>
         );
     }

@@ -1,7 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useContext } from 'react';
 import styles from '../../styles/Login.module.css';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
+import routes from '../../locales/login.js';
+import AppContext from '../../AppContext';
 
 export default function Register() {
     const dispatch = useDispatch();
@@ -9,6 +11,9 @@ export default function Register() {
     const email = useRef(null);
     const password = useRef(null);
     const passwordTypo = useRef(null);
+    const { language } = useContext(AppContext);
+
+    const getText = (key) => routes.register[key][language] || routes.register[key].en;
 
     async function register(event) {
         event.preventDefault();
@@ -29,14 +34,14 @@ export default function Register() {
 
                     if (!res.ok) {
                         const errorData = await res.json();
-                        throw new Error(errorData.message || 'Fehler beim Erstellen des Benutzers');
+                        throw new Error(errorData.message || getText('defaultError'));
                     }
 
                     const data = await res.json();
 
                     const newNotification = {
                         id: Date.now(),
-                        message: `Der Benutzer ${username.current.value} wurde registriert!`,
+                        message: getText('registrationSuccess').replace('{username}', username.current.value),
                     };
                     dispatch(addNotification(newNotification));
 
@@ -50,14 +55,14 @@ export default function Register() {
             } else {
                 const newNotification = {
                     id: Date.now(),
-                    message: 'Die Passwörter stimmen nicht überein.',
+                    message: getText('passwordMismatch'),
                 };
                 dispatch(addNotification(newNotification));
             }
         } else {
             const newNotification = {
                 id: Date.now(),
-                message: 'Das Passwort muss mindestens 5 Zeichen lang sein.',
+                message: getText('passwordTooShort'),
             };
             dispatch(addNotification(newNotification));
         }
@@ -65,25 +70,25 @@ export default function Register() {
 
     return (
         <div>
-            <h1>Registrieren</h1>
+            <h1>{getText('title')}</h1>
             <form className={styles.form} onSubmit={register}>
-                <label>Benutzername:
+                <label>{getText('usernameLabel')} 
                     <input ref={username} required />
                 </label>
 
-                <label>E-Mail Adresse:
+                <label>{getText('emailLabel')}
                     <input ref={email} type="email" required />
                 </label>
 
-                <label>Passwort:
+                <label>{getText('passwordLabel')}
                     <input type="password" ref={password} required />
                 </label>
 
-                <label>Passwort wiederholen:
+                <label>{getText('confirmPasswordLabel')} 
                     <input type="password" ref={passwordTypo} required />
                 </label>
 
-                <button className={styles.submit} type="submit">Registrieren</button>
+                <button className={styles.submit} type="submit">{getText('registerButton')}</button>
             </form>
         </div>
     );

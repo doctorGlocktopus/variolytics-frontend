@@ -10,6 +10,7 @@
 
 /* Device Table Styles */
 .deviceTable {
+    cursor: pointer;
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;

@@ -2,6 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+
+  i18n: {
+    locales: ['de', 'en'],
+    defaultLocale: 'de',
+  },
+
   rewrites: async () => [
     {
       source: '/api/tasks/:path*/',
@@ -14,4 +20,4 @@ const nextConfig = {
   ]
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;

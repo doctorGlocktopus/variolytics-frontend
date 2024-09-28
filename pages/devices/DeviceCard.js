@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import CustomBarChart from './CustomBarChart';
 import styles from '../../styles/Device.module.css';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../../redux/notificationSlice';
+import AppContext from '../../AppContext';
+import routes from '../../locales/devicesCard.js';
 
 function DeviceCard({ device, onFetchData }) {
+    const { language } = useContext(AppContext);
     const [selectedChart, setSelectedChart] = useState('N2O');
     const [measurements, setMeasurements] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -31,14 +34,14 @@ function DeviceCard({ device, onFetchData }) {
             console.error('Fehler beim Abrufen der Messdaten:', error);
             const newNotification = {
                 id: Date.now(),
-                message: `Fehler beim Laden der Gerätedaten.`,
+                message: `${routes.deviceCard.errorMessage[language]}`,
             };
             dispatch(addNotification(newNotification));
         } finally {
             setLoading(false);
         }
     };
-    
+
     const exportData = async () => {
         try {
             const response = await fetch(`/api/devices/export?deviceId=${device.DeviceId}&selectedChart=${selectedChart}&startDate=${startDate}&endDate=${endDate}`, {
@@ -59,14 +62,13 @@ function DeviceCard({ device, onFetchData }) {
             document.body.removeChild(link);
             const newNotification = {
                 id: Date.now(),
-                message: `Export erfolgreich.`,
+                message: `${routes.deviceCard.exportSuccess[language]}`,
             };
             dispatch(addNotification(newNotification));
         } catch (error) {
             console.error('Fehler beim Export der Daten:', error);
         }
     };
-    
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
@@ -92,8 +94,6 @@ function DeviceCard({ device, onFetchData }) {
     const valueData = measurements.reduce((acc, measurement) => {
         const { date, value, temperature, flowRate } = measurement;
 
-        console.log(measurement)
-
         acc.push({
             key: measurement.key,
             date,
@@ -118,7 +118,6 @@ function DeviceCard({ device, onFetchData }) {
         setEndDate(new Date(endDateObj.getTime() + (direction * weekInMilliseconds)).toISOString().split('T')[0]);
     };
 
-    
     const handleMeasureClick = (id) => {
         router.push(`/devices/${id}`);
     };
@@ -126,42 +125,56 @@ function DeviceCard({ device, onFetchData }) {
     return (
         <div ref={deviceRef} className={styles.deviceCard}>
             <div>
-                <a className={styles.deviceLink}><h3 onClick={() => handleMeasureClick(device.DeviceId) }>{device.DeviceName}</h3></a>
+                <a className={styles.deviceLink}>
+                    <h3 onClick={() => handleMeasureClick(device.DeviceId)}>{device.DeviceName}</h3>
+                </a>
             </div>
 
             <div className={styles.tabContainer}>
-                <button onClick={() => setSelectedChart('all')} className={selectedChart === 'all' ? styles.activeTab : ''}>Alle (ppm)</button>
-                <button onClick={() => setSelectedChart('N2O')} className={selectedChart === 'N2O' ? styles.activeTab : ''}>N2O (ppm)</button>
-                <button onClick={() => setSelectedChart('CH4')} className={selectedChart === 'CH4' ? styles.activeTab : ''}>CH4 (ppm)</button>
-                <button onClick={() => setSelectedChart('CO2')} className={selectedChart === 'CO2' ? styles.activeTab : ''}>CO2 (Vol.%)</button>
-                <button onClick={() => setSelectedChart('O2')} className={selectedChart === 'O2' ? styles.activeTab : ''}>O2 (Vol.%)</button>
+                <button onClick={() => setSelectedChart('all')} className={selectedChart === 'all' ? styles.activeTab : ''}>
+                    {routes.deviceCard.all[language]}
+                </button>
+                <button onClick={() => setSelectedChart('N2O')} className={selectedChart === 'N2O' ? styles.activeTab : ''}>
+                    {routes.deviceCard.n2o[language]}
+                </button>
+                <button onClick={() => setSelectedChart('CH4')} className={selectedChart === 'CH4' ? styles.activeTab : ''}>
+                    {routes.deviceCard.ch4[language]}
+                </button>
+                <button onClick={() => setSelectedChart('CO2')} className={selectedChart === 'CO2' ? styles.activeTab : ''}>
+                    {routes.deviceCard.co2[language]}
+                </button>
+                <button onClick={() => setSelectedChart('O2')} className={selectedChart === 'O2' ? styles.activeTab : ''}>
+                    {routes.deviceCard.o2[language]}
+                </button>
 
-                <button onClick={() => navigateStartDateWeeks(-1)}>&lt;</button>
+                <button onClick={() => navigateStartDateWeeks(-1)}>{routes.deviceCard.previousWeek[language]}</button>
                 <div className={styles.flexX}>
-                    <label>Startdatum:</label>
+                    <label>{routes.deviceCard.startDate[language]}</label>
                     <input 
-                    type="date" 
-                    value={startDate} 
-                    onChange={(e) => setStartDate(e.target.value)} 
-                />
+                        type="date" 
+                        value={startDate} 
+                        onChange={(e) => setStartDate(e.target.value)} 
+                    />
                 </div>
-                <button onClick={() => navigateStartDateWeeks(1)}>&gt;</button>
+                <button onClick={() => navigateStartDateWeeks(1)}>{routes.deviceCard.nextWeek[language]}</button>
 
-                <button onClick={() => navigateEndDateWeeks(-1)}>&lt;</button>
+                <button onClick={() => navigateEndDateWeeks(-1)}>{routes.deviceCard.previousWeek[language]}</button>
                 <div className={styles.flexX}>
-                    <label>Enddatum:</label>
+                    <label>{routes.deviceCard.endDate[language]}</label>
                     <input 
                         type="date" 
                         value={endDate} 
                         onChange={(e) => setEndDate(e.target.value)} 
                     />
                 </div>
-                <button onClick={() => navigateEndDateWeeks(1)}>&gt;</button>
-                <button onClick={exportData} className={styles.downloadButton}>Daten herunterladen</button>
+                <button onClick={() => navigateEndDateWeeks(1)}>{routes.deviceCard.nextWeek[language]}</button>
+                <button onClick={exportData} className={styles.downloadButton}>
+                    {routes.deviceCard.downloadData[language]}
+                </button>
             </div>
 
             {loading ? (
-                <p>Lade Messdaten...</p>
+                <p>{routes.deviceCard.loadingData[language]}</p>
             ) : (
                 valueData.length > 0 ? (
                     <CustomBarChart
@@ -169,7 +182,7 @@ function DeviceCard({ device, onFetchData }) {
                         label={`Messdaten (Einheit)`} 
                     />
                 ) : (
-                    <p>Keine Messdaten verfügbar</p>
+                    <p>{routes.deviceCard.noDataAvailable[language]}</p>
                 )
             )}
         </div>
