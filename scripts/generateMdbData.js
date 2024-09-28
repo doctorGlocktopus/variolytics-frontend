@@ -76,6 +76,6 @@ const saveDataToMongoDB = async (data) => {
   }
 };
 
-const numRecords = 10000;
+const numRecords = 100000;
 const mockData = generateData(numRecords);
 saveDataToMongoDB(mockData);

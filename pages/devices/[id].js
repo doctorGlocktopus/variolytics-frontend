@@ -14,7 +14,7 @@ function DeviceDetails() {
     let [device, setDevice] = useState(null);
     const [selectedChart, setSelectedChart] = useState('N2O');
     const [loading, setLoading] = useState(false);
-    const [startDate, setStartDate] = useState('2024-09-01');
+    const [startDate, setStartDate] = useState('2024-09-18');
     const [endDate, setEndDate] = useState('2024-09-25');
     const deviceRef = useRef();
 
