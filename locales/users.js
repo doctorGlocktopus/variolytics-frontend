@@ -34,6 +34,12 @@ const routes = {
                 en: "Delete",
             },
         },
+        notifications: {
+            deleteSuccess: {
+                en: "User deleted successfully.",
+                de: "Benutzer erfolgreich gelöscht.",
+            },
+        },
     },
     userDetail: {
         title: {

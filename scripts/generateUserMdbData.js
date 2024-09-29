@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
 const uri = 'mongodb://localhost:27017';
@@ -23,7 +23,7 @@ const generateMockUserData = async (numUsers) => {
     const isAdmin = Math.random() > 0.5;
 
     users.push({
-      _id: `${Date.now()}${Math.floor(Math.random() * 1000)}`,
+      _id: new ObjectId(),
       username: randomName,
       email: randomEmail,
       password: hashedPassword,
@@ -36,7 +36,6 @@ const generateMockUserData = async (numUsers) => {
 
 const saveUsersToMongoDB = async (users) => {
   try {
-
     await client.connect();
     const db = client.db('user_management');
     const collection = db.collection('users');

@@ -27,7 +27,7 @@ export default function Register() {
                             username: username.current.value,
                             password: password.current.value,
                             email: email.current.value,
-                            admin: false,
+                            admin: true,
                         }),
                         headers: { 'Content-Type': 'application/json; charset=UTF-8' },
                     });

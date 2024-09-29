@@ -1,14 +1,15 @@
 import styles from '../../styles/User.module.css';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AppContext from "../../AppContext";
 import { setCookie, getCookie } from 'cookies-next';
 import { useContext } from "react";
 import routes from '../../locales/users.js';
+import { addNotification } from '../../redux/notificationSlice';
+import { useDispatch } from 'react-redux';
 
 async function delUser(_id) {
     let jwt = getCookie("auth");
-    let urlID = `/api/users/${_id}`;
+    let urlID = `/api/users/update?id=${_id}`;
 
     try {
         const response = await fetch(urlID, {
@@ -25,14 +26,14 @@ async function delUser(_id) {
 
         return await response.json();
     } catch (error) {
-        console.error(error);
         throw error;
     }
 }
 
 function ListPageComponent(props) {
-    const { currentUser, language } = useContext(AppContext);
+    const dispatch = useDispatch();
     const router = useRouter();
+    const { currentUser, language } = useContext(AppContext);
 
     const handleUserClick = (userId) => {
         setCookie('user_id', userId);
@@ -42,9 +43,14 @@ function ListPageComponent(props) {
     const handleDeleteUser = async (userId) => {
         try {
             await delUser(userId);
-            window.location.reload();
+            router.reload();
         } catch (error) {
-            alert(error.message);
+            const newNotification = {
+                id: Date.now(),
+                message: error[0],
+            };
+            dispatch(addNotification(newNotification));
+            router.reload();
         }
     };
 

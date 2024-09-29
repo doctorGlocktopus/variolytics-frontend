@@ -3,9 +3,14 @@ import AppContext from "../../AppContext";
 import { useContext, useState } from "react";
 import { getCookie } from 'cookies-next';
 import routes from '../../locales/users.js';
+import { addNotification } from '../../redux/notificationSlice';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 function OneUser({ user }) {
-    const { currentUser, setCurrentUser, language } = useContext(AppContext);
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const { setCurrentUser, language } = useContext(AppContext);
     const [updatedUser, setUpdatedUser] = useState({
         username: user?.username,
         admin: user?.admin,
@@ -36,8 +41,12 @@ function OneUser({ user }) {
     
         if (!response.ok) {
             const errorMessage = await response.text();
-            console.error("Update error:", errorMessage);
-            alert(`Update failed: ${errorMessage}`);
+            const newNotification = {
+                id: Date.now(),
+                message: errorMessage,
+            };
+            dispatch(addNotification(newNotification));
+            router.reload();
             return;
         }
     
@@ -62,11 +71,14 @@ function OneUser({ user }) {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            window.location.reload();
+            router.push("/users");
         })
         .catch(error => {
-            console.error('There was a problem with the delete operation:', error);
-            alert(`Delete failed: ${error.message}`);
+            const newNotification = {
+                id: Date.now(),
+                message: error.errorMessage,
+            };
+            dispatch(addNotification(newNotification));
         });
     }    
 

@@ -1,4 +1,5 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
@@ -6,10 +7,6 @@ const client = new MongoClient(uri);
 export default async function handler(req, res) {
     const { method } = req;
     const { id } = req.query;
-
-    if (id && !ObjectId.isValid(id)) {
-        return res.status(400).json({ error: 'Invalid user ID format.' });
-    }
 
     try {
         await client.connect();
@@ -22,6 +19,7 @@ export default async function handler(req, res) {
             }
 
             const existingUser = await collection.findOne({ _id: new ObjectId(id) });
+            
             if (!existingUser) {
                 return res.status(404).json({ error: 'User not found' });
             }
@@ -40,12 +38,16 @@ export default async function handler(req, res) {
         }
 
         if (method === 'DELETE') {
+
             if (!id) {
                 return res.status(400).json({ error: 'User ID is required.' });
             }
 
+            console.log(id, typeof id)
+
             const result = await collection.deleteOne({ _id: new ObjectId(id) });
 
+            console.log(result)
             if (result.deletedCount === 0) {
                 return res.status(404).json({ error: 'User not found' });
             }

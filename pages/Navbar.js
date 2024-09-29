@@ -51,14 +51,16 @@ export default function Navbar() {
                     <button className={styles.button} onClick={toggleMenu}>
                         X
                     </button> : <div></div>}
-                {Object.values(routes).map(({ path, text }) => (
-                    <a key={path} href={path}>
-                        {text[language] || text.de}
-                    </a>
-                ))}
+                    {currentUser ? (
+                        Object.values(routes).map(({ path, text }) => (
+                            <a key={path} href={path}>
+                                {text[language] || text.de}
+                            </a>
+                        ))
+                    ) : <div></div>}
                 {currentUser ? (
                     <a href="#" onClick={logout}>Logout</a>
-                ) : <div></div>}
+                ) : <a href="/login">Login</a>}
             </div>
         </nav>
     );

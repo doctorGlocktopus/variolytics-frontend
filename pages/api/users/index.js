@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
@@ -12,13 +12,17 @@ export default async function handler(req, res) {
         const collection = db.collection('users');
 
         if (method === 'GET') {
-
             const users = await collection.find({}).toArray();
             return res.status(200).json(users);
         } else if (method === 'DELETE') {
-
             const { id } = req.query;
-            const result = await collection.deleteOne({ _id: new MongoClient.ObjectId(id) });
+console.log(id)
+            // Validate ObjectId format
+            if (!ObjectId.isValid(id)) {
+                return res.status(400).json({ error: 'Ungültige Benutzer-ID' });
+            }
+
+            const result = await collection.deleteOne({ _id: new ObjectId(id) });
 
             if (result.deletedCount === 0) {
                 return res.status(404).json({ error: 'Benutzer nicht gefunden' });
