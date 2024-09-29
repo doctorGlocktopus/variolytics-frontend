@@ -11,19 +11,49 @@ export default async function handler(req, res) {
 
         const escapeRegex = (str) => {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          };
-          
-          const matchStage = {
-            $and: [
-              {
-                $or: [
-                  { MeasureId: Number(searchTerm) }, 
-                  { DeviceName: { $regex: searchTerm, $options: 'i' } }
+        };
+
+        const isNumber = !isNaN(Number(searchTerm));
+
+        const isDate = !isNaN(Date.parse(searchTerm));
+
+        let matchStage;
+
+        if (isNumber) {
+            matchStage = {
+                $and: [
+                    {
+                        $or: [
+                            { MeasureId: Number(searchTerm) },
+                            { DeviceName: { $regex: escapeRegex(searchTerm), $options: 'i' } },
+                        ]
+                    }
                 ]
-              }
-            ]
-          };
-          
+            };
+        } else if (isDate) {
+            const date = new Date(searchTerm);
+
+            matchStage = {
+                $and: [
+                    {
+                        $or: [
+                            { DateField: date },
+                            { DeviceName: { $regex: escapeRegex(searchTerm), $options: 'i' } },
+                        ]
+                    }
+                ]
+            };
+        } else {
+            matchStage = {
+                $and: [
+                    {
+                        $or: [
+                            { DeviceName: { $regex: escapeRegex(searchTerm), $options: 'i' } }
+                        ]
+                    }
+                ]
+            };
+        }
 
         const sortOptions = {
             [sortBy]: sortDirection === 'asc' ? 1 : -1,
