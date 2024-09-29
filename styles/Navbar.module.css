@@ -58,6 +58,10 @@
     cursor: pointer;
 }
 
+.hamburgerButton {
+    display: none;
+}
+
 .hidden {
     opacity: 0;
     transform: translateY(-10px);
@@ -75,6 +79,17 @@
 }
 
 @media (max-width: 768px) {
+    .hamburgerButton {
+        display: block;
+        margin-bottom: 1rem;
+        background: rgb(0, 196, 159);
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
     .menuToggle {
         display: block;
         margin-bottom: 1rem;

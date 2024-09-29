@@ -32,7 +32,7 @@ export default function Navbar() {
             </div>
             {isMenuOpen ? <h2>{currentUser?.username}</h2> : <div></div>}
             <div className={styles.switchContainer}>
-                    <button className={styles.button} onClick={toggleMenu}>
+                    <button className={styles.hamburgerButton} onClick={toggleMenu}>
                         {isMenuOpen ? 'Close Menu' : 'Open Menu'}
                     </button>
                     {language === 'en' ? (
