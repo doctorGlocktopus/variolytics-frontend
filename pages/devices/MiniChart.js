@@ -1,5 +1,6 @@
 import styles from '../../styles/Device.module.css';
 import Image from 'next/image';
+import { getColor } from '../../utils/utils.js';
 
 function MiniChart({ values }) {
   const latestValues = values.reduce((acc, item) => {
@@ -57,29 +58,41 @@ function MiniChart({ values }) {
       <div className={styles.latestValuesContainer}>
         <h3>{formatDate(mostRecentValues.date)}</h3>
         <div className={styles.valueCardContainer}>
+        <div className={styles.valueCard}>
+          <Image src={getSvgPath('N2O')} alt="N2O" width={50} height={50} />
+          <div style={{ color: getColor(mostRecentValues.N2O, 50) }}>
+              N2O: <br />{mostRecentValues.N2O} ppm
+          </div>
+        </div>
           <div className={styles.valueCard}>
-            <Image src={getSvgPath('N2O')} alt="N2O" className={styles.icon} width={50} height={50} />
-            N2O: <br></br>{mostRecentValues.N2O} ppm
+              <Image src={getSvgPath('CH4')} alt="CH4" className={styles.icon} width={50} height={50} />
+              <div style={{ color: getColor(mostRecentValues.CH4, 100) }}>
+                  CH4: <br />{mostRecentValues.CH4} ppm
+              </div>
           </div>
           <div className={styles.valueCard}>
-            <Image src={getSvgPath('CH4')} alt="CH4" className={styles.icon} width={50} height={50} />
-            CH4: <br></br>{mostRecentValues.CH4} ppm
+              <Image src={getSvgPath('CO2')} alt="CO2" className={styles.icon} width={50} height={50} />
+              <div style={{ color: getColor(mostRecentValues.CO2, 20) }}>
+                  CO2: <br />{mostRecentValues.CO2} Vol. %
+              </div>
           </div>
           <div className={styles.valueCard}>
-            <Image src={getSvgPath('CO2')} alt="CO2" className={styles.icon} width={50} height={50} />
-            CO2: <br></br>{mostRecentValues.CO2} Vol. %
+              <Image src={getSvgPath('O2')} alt="O2" className={styles.icon} width={50} height={50} />
+              <div style={{ color: getColor(mostRecentValues.O2, 100) }}>
+                  O2: <br />{mostRecentValues.O2} Vol. %
+              </div>
           </div>
           <div className={styles.valueCard}>
-            <Image src={getSvgPath('O2')} alt="O2" className={styles.icon} width={50} height={50} />
-            O2: <br></br>{mostRecentValues.O2} Vol. %
+              <Image src={getSvgPath('Temperature')} alt="Temperature" className={styles.icon} width={50} height={50} />
+              <div style={{ color: getColor(mostRecentValues.temperature, 100) }}>
+                  Temperatur: <br />{mostRecentValues.temperature} °C
+              </div>
           </div>
           <div className={styles.valueCard}>
-            <Image src={getSvgPath('Temperature')} alt="Temperature" className={styles.icon} width={50} height={50} />
-            Temperatur: <br></br>{mostRecentValues.temperature} °C
-          </div>
-          <div className={styles.valueCard}>
-            <Image src={getSvgPath('flowRate')} alt="flowRate" className={styles.icon} width={50} height={50} />
-            FlowRate: <br></br>{mostRecentValues.flowRate} L/min
+              <Image src={getSvgPath('flowRate')} alt="flowRate" className={styles.icon} width={50} height={50} />
+              <div style={{ color: getColor(mostRecentValues.flowRate, 200) }}>
+                  FlowRate: <br />{mostRecentValues.flowRate} L/min
+              </div>
           </div>
         </div>
       </div>

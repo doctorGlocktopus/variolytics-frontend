@@ -25,11 +25,6 @@ export default function Navbar() {
 
     return (
         <nav className={styles.sidebar}>
-            <div className={styles.rowMenue}>
-                <div>
-                    
-                </div>
-            </div>
             {isMenuOpen ? <h2>{currentUser?.username}</h2> : <div></div>}
             <div className={styles.switchContainer}>
                     <button className={styles.hamburgerButton} onClick={toggleMenu}>
