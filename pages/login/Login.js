@@ -44,7 +44,7 @@ export function Login() {
                 setCookie('auth', actualData.accessToken);
                 setCurrentUser(actualData.user);
                 localStorage.setItem("user", JSON.stringify(actualData.user));
-                Router.push("/");
+                Router.push("/users");
 
                 const newNotification = {
                     id: Date.now(),

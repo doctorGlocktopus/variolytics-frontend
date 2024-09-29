@@ -147,27 +147,30 @@ function DeviceCard({ device, onFetchData }) {
                     {routes.deviceCard.o2[language]}
                 </button>
 
-                <button onClick={() => navigateStartDateWeeks(-1)}>{routes.deviceCard.previousWeek[language]}</button>
-                <div className={styles.flexX}>
-                    <label>{routes.deviceCard.startDate[language]}</label>
-                    <input 
-                        type="date" 
-                        value={startDate} 
-                        onChange={(e) => setStartDate(e.target.value)} 
-                    />
+                <div className={styles.dateContainer}>
+                    <button onClick={() => navigateStartDateWeeks(-1)}>{routes.deviceCard.previousWeek[language]}</button>
+                    <div className={styles.flexX}>
+                        <label>{routes.deviceCard.startDate[language]}</label>
+                        <input 
+                            type="date" 
+                            value={startDate} 
+                            onChange={(e) => setStartDate(e.target.value)} 
+                        />
+                    </div>
+                    <button onClick={() => navigateStartDateWeeks(1)}>{routes.deviceCard.nextWeek[language]}</button>
                 </div>
-                <button onClick={() => navigateStartDateWeeks(1)}>{routes.deviceCard.nextWeek[language]}</button>
-
-                <button onClick={() => navigateEndDateWeeks(-1)}>{routes.deviceCard.previousWeek[language]}</button>
-                <div className={styles.flexX}>
-                    <label>{routes.deviceCard.endDate[language]}</label>
-                    <input 
-                        type="date" 
-                        value={endDate} 
-                        onChange={(e) => setEndDate(e.target.value)} 
-                    />
+                <div className={styles.dateContainer}>
+                    <button onClick={() => navigateEndDateWeeks(-1)}>{routes.deviceCard.previousWeek[language]}</button>
+                    <div className={styles.flexX}>
+                        <label>{routes.deviceCard.endDate[language]}</label>
+                        <input 
+                            type="date" 
+                            value={endDate} 
+                            onChange={(e) => setEndDate(e.target.value)} 
+                        />
+                    </div>
+                    <button onClick={() => navigateEndDateWeeks(1)}>{routes.deviceCard.nextWeek[language]}</button>
                 </div>
-                <button onClick={() => navigateEndDateWeeks(1)}>{routes.deviceCard.nextWeek[language]}</button>
                 <button onClick={exportData} className={styles.downloadButton}>
                     {routes.deviceCard.downloadData[language]}
                 </button>

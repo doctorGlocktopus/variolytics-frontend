@@ -41,7 +41,7 @@ function ListPageComponent() {
     return (
         <div className={styles.container}>
             {loading ? (
-                <p>Lade Geräte...</p>
+                <div className={styles.loader}></div>
             ) : (
                 <div className={styles.deviceGrid}>
                     {devices.map(device => (

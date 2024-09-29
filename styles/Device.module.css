@@ -42,7 +42,6 @@
 /* Button Styles */
 
 .deviceLink{
-  margin: 10px;
   border: none;
   background-color: #f0f0f0;
   border-radius: 5px;
@@ -182,6 +181,10 @@
   color: #00c49f;
 }
 
+.dateContainer {
+  display: flex;
+}
+
 /* Miscellaneous */
 .table th {
   cursor: pointer;
@@ -230,4 +233,24 @@
 
 .ch4Value {
   color: red;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* loader */
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #00c49f;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: auto;
 }

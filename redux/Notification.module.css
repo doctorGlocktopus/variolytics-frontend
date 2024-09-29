@@ -40,9 +40,11 @@
 
 @keyframes slideOut {
     from {
+        transform: translateY(0px);
         opacity: 1;
     }
     to {
+        transform: translateY(-10);
         opacity: 0;
     }
 }
