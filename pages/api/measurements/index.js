@@ -9,29 +9,37 @@ export default async function handler(req, res) {
         const db = client.db('measurements');
         const collection = db.collection('measurements');
 
-        const matchStage = {
+        const escapeRegex = (str) => {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          };
+          
+          const matchStage = {
             $and: [
               {
                 $or: [
-                  { DeviceId: { $regex: searchTerm, $options: 'i' } }, // Suche in DeviceId
-                  { DeviceName: { $regex: searchTerm, $options: 'i' } }, // Suche in DeviceName
-                  { MeasureId: { $regex: searchTerm, $options: 'i' } }, // Suche in MeasureId
+                  { DeviceId: { $regex: escapeRegex(searchTerm), $options: 'i' } }, 
+                  { MeasureId: { $regex: escapeRegex(searchTerm), $options: 'i' } }, 
+                  { DeviceName: { $regex: searchTerm, $options: 'i' } }
                 ]
               },
-              // Falls searchTerm eine Zahl ist, überprüfe numerische Felder
               searchTerm && !isNaN(searchTerm) ? {
                 $or: [
-                  { FlowRate: parseFloat(searchTerm) }, // Suche nach FlowRate
-                  { N2O: parseFloat(searchTerm) }, // Suche nach N2O
-                  { CH4: parseFloat(searchTerm) }, // Suche nach CH4
-                  { CO2: parseFloat(searchTerm) }, // Suche nach CO2
-                  { O2: parseFloat(searchTerm) }, // Suche nach O2
-                  { Temperature: parseFloat(searchTerm) } // Suche nach Temperature
+                  { FlowRate: parseFloat(searchTerm) },
+                  { N2O: parseFloat(searchTerm) },
+                  { CH4: parseFloat(searchTerm) },
+                  { CO2: parseFloat(searchTerm) },
+                  { O2: parseFloat(searchTerm) },
+                  { Temperature: parseFloat(searchTerm) }
                 ]
               } : {},
-              // Suche nach IsActive, falls der Begriff "true" oder "false" ist
               searchTerm === 'true' || searchTerm === 'false' ? {
                 IsActive: searchTerm === 'true'
+              } : {},
+              !isNaN(Date.parse(searchTerm)) ? {
+                Date: {
+                  $gte: new Date(new Date(searchTerm).setHours(0, 0, 0)),
+                  $lt: new Date(new Date(searchTerm).setHours(23, 59, 59))
+                }
               } : {}
             ]
           };
