@@ -71,6 +71,7 @@
 .switchContainer {
     display: flex;
     gap: 1%;
+    margin-right: 7%;
 }
 
 @media (max-width: 768px) {
@@ -99,7 +100,7 @@
         background: white;
         width: 100%;
         left: 0;
-        top: 0;
+        top: -10px;
         max-height: 0;
         transition: max-height 0.3s ease-in-out;
         overflow: hidden;
