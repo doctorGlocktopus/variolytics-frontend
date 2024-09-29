@@ -9,13 +9,12 @@ export default async function handler(req, res) {
         const db = client.db('measurements');
         const collection = db.collection('measurements');
 
-        const { searchTerm = '', page = 1, limit = 10, selectedChart = 'N2O' } = req.query; // added selectedChart
+        const { searchTerm = '', page = 1, limit = 10, selectedChart = 'N2O' } = req.query;
         const skip = (parseInt(page) - 1) * parseInt(limit);
 
         const matchStage = {
             $match: {
                 $or: [
-                    { DeviceId: { $regex: searchTerm, $options: 'i' } },
                     { DeviceName: { $regex: searchTerm, $options: 'i' } }
                 ]
             }
@@ -27,7 +26,7 @@ export default async function handler(req, res) {
                 measurements: {
                     $push: {
                         Date: "$Date",
-                        value: `$${selectedChart}`, // Only keep the selected measurement
+                        value: `$${selectedChart}`,
                     }
                 }
             }

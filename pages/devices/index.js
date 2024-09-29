@@ -40,6 +40,13 @@ function ListPageComponent() {
 
     return (
         <div className={styles.container}>
+            <input 
+                type="text" 
+                placeholder="Device X"
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)} 
+                className={styles.searchInput}
+            />
             {loading ? (
                 <div className={styles.loader}></div>
             ) : (

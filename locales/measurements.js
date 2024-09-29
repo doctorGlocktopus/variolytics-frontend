@@ -5,8 +5,8 @@ const routes = {
             en: "Measurements"
         },
         searchPlaceholder: {
-            de: "Suche...",
-            en: "Search..."
+            de: "Messungen / Geräte",
+            en: "Measurements / Devices"
         },
         previous: {
             de: "Vorherige",
