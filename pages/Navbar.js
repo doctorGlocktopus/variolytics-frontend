@@ -26,47 +26,36 @@ export default function Navbar() {
     return (
         <nav className={styles.sidebar}>
             <div className={styles.rowMenue}>
-                <button className={styles.menuToggle} onClick={toggleMenu}>
-                    {isMenuOpen ? 'Close Menu' : 'Open Menu'}
-                </button>
                 <div>
-                    {language === 'en' ? (
-                        <button 
-                            onClick={() => changeLanguage('de')}
-                            style={{
-                                display: 'block',
-                                marginBottom: '1rem',
-                                background: '#00c49f',
-                                color: 'white',
-                                border: 'none',
-                                padding: '0.5rem',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            <h4>English</h4>
-                        </button>
-                    ) : (
-                        <button 
-                            onClick={() => changeLanguage('en')}
-                            style={{
-                                display: 'block',
-                                marginBottom: '1rem',
-                                background: '#00c49f',
-                                color: 'white',
-                                border: 'none',
-                                padding: '0.5rem',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            <h4>Deutsch</h4>
-                        </button>
-                    )}
+                    
                 </div>
             </div>
             {isMenuOpen ? <h2>{currentUser?.username}</h2> : <div></div>}
+            <div className={styles.switchContainer}>
+                    <button className={styles.button} onClick={toggleMenu}>
+                        {isMenuOpen ? 'Close Menu' : 'Open Menu'}
+                    </button>
+                    {language === 'en' ? (
+                            <button 
+                                onClick={() => changeLanguage('de')}
+                                className={styles.button}
+                            >
+                                <h4>English</h4>
+                            </button>
+                        ) : (
+                            <button 
+                                onClick={() => changeLanguage('en')}
+                                className={styles.button}
+                            >
+                                <h4>Deutsch</h4>
+                            </button>
+                        )}
+                </div>
             <div className={`${styles.navLinks} ${isMenuOpen ? styles.show : ''}`}>
+                {isMenuOpen ?
+                    <button className={styles.button} onClick={toggleMenu}>
+                        X
+                    </button> : <div></div>}
                 {Object.values(routes).map(({ path, text }) => (
                     <a key={path} href={path}>
                         {text[language] || text.de}
