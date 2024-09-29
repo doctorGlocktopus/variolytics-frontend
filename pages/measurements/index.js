@@ -14,6 +14,7 @@ function ListPageComponent() {
     const { page: pageQuery } = router.query;
     const [devices, setDevices] = useState([]);
     const [totalDevices, setTotalDevices] = useState(0);
+    const [loading, setLoading] = useState(true);
     const limit = 5;
     const page = parseInt(pageQuery) || 1;
     const [searchTerm, setSearchTerm] = useState('');
@@ -22,6 +23,7 @@ function ListPageComponent() {
     const dispatch = useDispatch();
 
     const fetchDevices = async () => {
+        setLoading(true);
         try {
             const response = await fetch(`/api/measurements?page=${page}&limit=${limit}&sortBy=${sortColumn}&sortDirection=${sortDirection}&searchTerm=${searchTerm}`);
             const data = await response.json();
@@ -35,9 +37,10 @@ function ListPageComponent() {
         } catch (error) {
             console.error('Error fetching devices:', error);
             setDevices([]);
+        } finally {
+            setLoading(false);
         }
     };
-    
 
     useEffect(() => {
         fetchDevices();
@@ -101,46 +104,51 @@ function ListPageComponent() {
                 <span>Seite {page} von {totalPages}</span>
                 <button onClick={() => changePage(page + 1)} disabled={page === totalPages}>{routes.measurements.next[language]}</button>
             </div>
-            <table className={styles.deviceTable}>
-                <thead>
-                    <tr>
-                        <th onClick={() => sortDevices('MeasureId')}>{routes.measurements.columns.measureId[language]}</th>
-                        <th onClick={() => sortDevices('DeviceId')}>{routes.measurements.columns.deviceId[language]}</th>
-                        <th onClick={() => sortDevices('DeviceName')}>{routes.measurements.columns.deviceName[language]}</th>
-                        <th onClick={() => sortDevices('N2O')}>{routes.measurements.columns.n2o[language]}</th>
-                        <th onClick={() => sortDevices('CH4')}>{routes.measurements.columns.ch4[language]}</th>
-                        <th onClick={() => sortDevices('CO2')}>{routes.measurements.columns.co2[language]}</th>
-                        <th onClick={() => sortDevices('O2')}>{routes.measurements.columns.o2[language]}</th>
-                        <th onClick={() => sortDevices('FlowRate')}>{routes.measurements.columns.flowRate[language]}</th>
-                        <th onClick={() => sortDevices('Temperature')}>{routes.measurements.columns.temperature[language]}</th>
-                        <th onClick={() => sortDevices('Date')}>{routes.measurements.columns.date[language]}</th>
-                        <th onClick={() => sortDevices('IsActive')}>{routes.measurements.columns.status[language]}</th>
-                        {currentUser?.admin && <th>{routes.measurements.columns.actions[language]}</th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {devices.map(device => (
-                        <tr key={device.MeasureId} onClick={() => handleMeasureClick(device.MeasureId)} className={styles.cursorPointer}>
-                            <td>{device.MeasureId}</td>
-                            <td>{device.DeviceId}</td>
-                            <td>{device.DeviceName}</td>
-                            <td style={{ color: getColor(device.N2O, 50) }}>{device.N2O}</td>
-                            <td style={{ color: getColor(device.CH4, 100) }}>{device.CH4}</td>
-                            <td style={{ color: getColor(device.CO2, 20) }}>{device.CO2}</td>
-                            <td style={{ color: getColor(device.O2, 100) }}>{device.O2}</td>
-                            <td style={{ color: getColor(device.FlowRate, 5000) }}>{device.FlowRate}</td>
-                            <td style={{ color: getColor(device.Temperature, 100) }}>{device.Temperature}</td>
-                            <td>{new Date(device.Date).toLocaleString()}</td>
-                            <td>{device.IsActive ? routes.measurements.columns.active[language] : routes.measurements.columns.inactive[language]}</td>
-                            {currentUser?.admin && (
-                                <td>
-                                    <button className={styles.deleteButton} onClick={(e) => { e.stopPropagation(); delMeasure(device.MeasureId); }}>{routes.measurements.columns.delete[language]}</button>
-                                </td>
-                            )}
+
+            {loading ? (
+                <div className={styles.loader}></div>
+            ) : (
+                <table className={styles.deviceTable}>
+                    <thead>
+                        <tr>
+                            <th onClick={() => sortDevices('MeasureId')}>{routes.measurements.columns.measureId[language]}</th>
+                            <th onClick={() => sortDevices('DeviceId')}>{routes.measurements.columns.deviceId[language]}</th>
+                            <th onClick={() => sortDevices('DeviceName')}>{routes.measurements.columns.deviceName[language]}</th>
+                            <th onClick={() => sortDevices('N2O')}>{routes.measurements.columns.n2o[language]}</th>
+                            <th onClick={() => sortDevices('CH4')}>{routes.measurements.columns.ch4[language]}</th>
+                            <th onClick={() => sortDevices('CO2')}>{routes.measurements.columns.co2[language]}</th>
+                            <th onClick={() => sortDevices('O2')}>{routes.measurements.columns.o2[language]}</th>
+                            <th onClick={() => sortDevices('FlowRate')}>{routes.measurements.columns.flowRate[language]}</th>
+                            <th onClick={() => sortDevices('Temperature')}>{routes.measurements.columns.temperature[language]}</th>
+                            <th onClick={() => sortDevices('Date')}>{routes.measurements.columns.date[language]}</th>
+                            <th onClick={() => sortDevices('IsActive')}>{routes.measurements.columns.status[language]}</th>
+                            {currentUser?.admin && <th>{routes.measurements.columns.actions[language]}</th>}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {devices.map(device => (
+                            <tr key={device.MeasureId} onClick={() => handleMeasureClick(device.MeasureId)} className={styles.cursorPointer}>
+                                <td>{device.MeasureId}</td>
+                                <td>{device.DeviceId}</td>
+                                <td>{device.DeviceName}</td>
+                                <td style={{ color: getColor(device.N2O, 50) }}>{device.N2O}</td>
+                                <td style={{ color: getColor(device.CH4, 100) }}>{device.CH4}</td>
+                                <td style={{ color: getColor(device.CO2, 20) }}>{device.CO2}</td>
+                                <td style={{ color: getColor(device.O2, 100) }}>{device.O2}</td>
+                                <td style={{ color: getColor(device.FlowRate, 5000) }}>{device.FlowRate}</td>
+                                <td style={{ color: getColor(device.Temperature, 100) }}>{device.Temperature}</td>
+                                <td>{new Date(device.Date).toLocaleString()}</td>
+                                <td>{device.IsActive ? routes.measurements.columns.active[language] : routes.measurements.columns.inactive[language]}</td>
+                                {currentUser?.admin && (
+                                    <td>
+                                        <button className={styles.deleteButton} onClick={(e) => { e.stopPropagation(); delMeasure(device.MeasureId); }}>{routes.measurements.columns.delete[language]}</button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }

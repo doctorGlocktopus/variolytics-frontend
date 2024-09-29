@@ -176,8 +176,9 @@ function DeviceCard({ device, onFetchData }) {
                 </button>
             </div>
 
+            {/* Loading state */}
             {loading ? (
-                <p>{routes.deviceCard.loadingData[language]}</p>
+                <div className={styles.loader}></div> // Loader similar to ListPageComponent
             ) : (
                 valueData.length > 0 ? (
                     <CustomBarChart

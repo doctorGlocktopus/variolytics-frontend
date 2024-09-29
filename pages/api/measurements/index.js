@@ -17,30 +17,10 @@ export default async function handler(req, res) {
             $and: [
               {
                 $or: [
-                  { DeviceId: { $regex: escapeRegex(searchTerm), $options: 'i' } }, 
-                  { MeasureId: { $regex: escapeRegex(searchTerm), $options: 'i' } }, 
+                  { MeasureId: Number(searchTerm) }, 
                   { DeviceName: { $regex: searchTerm, $options: 'i' } }
                 ]
-              },
-              searchTerm && !isNaN(searchTerm) ? {
-                $or: [
-                  { FlowRate: parseFloat(searchTerm) },
-                  { N2O: parseFloat(searchTerm) },
-                  { CH4: parseFloat(searchTerm) },
-                  { CO2: parseFloat(searchTerm) },
-                  { O2: parseFloat(searchTerm) },
-                  { Temperature: parseFloat(searchTerm) }
-                ]
-              } : {},
-              searchTerm === 'true' || searchTerm === 'false' ? {
-                IsActive: searchTerm === 'true'
-              } : {},
-              !isNaN(Date.parse(searchTerm)) ? {
-                Date: {
-                  $gte: new Date(new Date(searchTerm).setHours(0, 0, 0)),
-                  $lt: new Date(new Date(searchTerm).setHours(23, 59, 59))
-                }
-              } : {}
+              }
             ]
           };
           
@@ -59,8 +39,6 @@ export default async function handler(req, res) {
         const devices = await collection.aggregate(pipeline).toArray();
         const totalResult = await collection.aggregate([{ $match: matchStage }, { $count: 'total' }]).toArray();
         const total = totalResult.length > 0 ? totalResult[0].total : 0;
-
-        console.log(devices[0])
 
         res.status(200).json({
             total: total,
