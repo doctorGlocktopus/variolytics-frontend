@@ -16,7 +16,7 @@ const devices = [
   { id: (Math.random()) + 1, name: 'Device J' }
 ];
 
-let currentId = 10000;
+let currentId = 100000;
 
 const startDate = new Date('2024-01-01T00:00:00');
 const endDate = new Date('2024-09-25T00:00:00');
