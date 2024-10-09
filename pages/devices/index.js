@@ -6,7 +6,7 @@ import { addNotification } from '../../redux/notificationSlice';
 
 function ListPageComponent() {
     const [devices, setDevices] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState('Device ');
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const dispatch = useDispatch();
@@ -18,12 +18,8 @@ function ListPageComponent() {
             const data = await response.json();
             
             setDevices(data.devices);
-            
-            if (data.devices.length < 10) {
-                setHasMore(false);
-            }
+
         } catch (error) {
-            console.error('Fehler beim Abrufen der Geräte:', error);
             const newNotification = {
                 id: Date.now(),
                 message: `Fehler beim Abrufen der Geräte:`,
@@ -44,7 +40,10 @@ function ListPageComponent() {
                 type="text" 
                 placeholder="Device X"
                 value={searchTerm} 
-                onChange={(e) => setSearchTerm(e.target.value)} 
+                onChange={(e) => {
+                    const value = e.target.value;
+                    setSearchTerm(value);
+                }} 
                 className={styles.searchInput}
             />
             {loading ? (
@@ -58,6 +57,7 @@ function ListPageComponent() {
             )}
         </div>
     );
+    
 }
 
 export default ListPageComponent;
