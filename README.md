@@ -14,11 +14,13 @@
     new connection to (mongodb://localhost:27017)
 
     create Database 'measurements' with the collection 'measurements'
+
     create Database 'user_management' with the collection 'users'
 
     run factorys
 
     node scripts/generateMdbData.js
+
     node scripts/generateUserMdbData.js
   
   
