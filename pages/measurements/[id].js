@@ -89,7 +89,7 @@ function DeviceDetails({ device }) {
     } else {
         return (
             <nav className={styles.container}>
-                <h2>{routes.deviceDetails.notFound[language]}</h2> {/* Gerät existiert nicht mehr */}
+                <h2>Measure not found</h2>
             </nav>
         );
     }
