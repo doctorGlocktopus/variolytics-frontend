@@ -17,6 +17,7 @@ export default function Navbar() {
 
     const changeLanguage = (lang) => {
         setLanguage(lang);
+        localStorage.setItem("language", lang);
     };
 
     const toggleMenu = () => {
@@ -27,37 +28,38 @@ export default function Navbar() {
         <nav className={styles.sidebar}>
             {isMenuOpen ? <h2>{currentUser?.username}</h2> : <div></div>}
             <div className={styles.switchContainer}>
-                    <button className={styles.hamburgerButton} onClick={toggleMenu}>
-                        {isMenuOpen ? 'Close Menu' : 'Open Menu'}
+                <button className={styles.hamburgerButton} onClick={toggleMenu}>
+                    {isMenuOpen ? 'Close Menu' : 'Open Menu'}
+                </button>
+                {language === 'en' ? (
+                    <button 
+                        onClick={() => changeLanguage('de')}
+                        className={styles.button}
+                    >
+                        <h4>English</h4>
                     </button>
-                    {language === 'en' ? (
-                            <button 
-                                onClick={() => changeLanguage('de')}
-                                className={styles.button}
-                            >
-                                <h4>English</h4>
-                            </button>
-                        ) : (
-                            <button 
-                                onClick={() => changeLanguage('en')}
-                                className={styles.button}
-                            >
-                                <h4>Deutsch</h4>
-                            </button>
-                        )}
-                </div>
+                ) : (
+                    <button 
+                        onClick={() => changeLanguage('en')}
+                        className={styles.button}
+                    >
+                        <h4>Deutsch</h4>
+                    </button>
+                )}
+            </div>
             <div className={`${styles.navLinks} ${isMenuOpen ? styles.show : ''}`}>
-                {isMenuOpen ?
+                {isMenuOpen ? (
                     <button className={styles.button} onClick={toggleMenu}>
                         X
-                    </button> : <div></div>}
-                    {currentUser ? (
-                        Object.values(routes).map(({ path, text }) => (
-                            <a key={path} href={path}>
-                                {text[language] || text.de}
-                            </a>
-                        ))
-                    ) : <div></div>}
+                    </button>
+                ) : <div></div>}
+                {currentUser ? (
+                    Object.values(routes).map(({ path, text }) => (
+                        <a key={path} href={path}>
+                            {text[language] || text.de}
+                        </a>
+                    ))
+                ) : <div></div>}
                 {currentUser ? (
                     <a href="#" onClick={logout}>Logout</a>
                 ) : <a href="/login">Login</a>}
