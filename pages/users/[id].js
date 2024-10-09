@@ -40,12 +40,6 @@ function OneUser({ user }) {
         });
     
         if (!response.ok) {
-            const errorMessage = await response.text();
-            const newNotification = {
-                id: Date.now(),
-                message: errorMessage,
-            };
-            dispatch(addNotification(newNotification));
             router.reload();
             return;
         } else {
