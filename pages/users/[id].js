@@ -48,6 +48,12 @@ function OneUser({ user }) {
             dispatch(addNotification(newNotification));
             router.reload();
             return;
+        } else {
+            const newNotification = {
+                id: Date.now(),
+                message: "User updated",
+            };
+            dispatch(addNotification(newNotification));
         }
     
         const updatedUserData = await response.json();

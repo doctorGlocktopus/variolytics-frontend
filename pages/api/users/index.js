@@ -14,22 +14,8 @@ export default async function handler(req, res) {
         if (method === 'GET') {
             const users = await collection.find({}).toArray();
             return res.status(200).json(users);
-        } else if (method === 'DELETE') {
-            const { id } = req.query;
-console.log(id)
-            // Validate ObjectId format
-            if (!ObjectId.isValid(id)) {
-                return res.status(400).json({ error: 'Ungültige Benutzer-ID' });
-            }
-
-            const result = await collection.deleteOne({ _id: new ObjectId(id) });
-
-            if (result.deletedCount === 0) {
-                return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-            }
-            return res.status(204).send(); 
         } else {
-            res.setHeader('Allow', ['GET', 'DELETE']);
+            res.setHeader('Allow', ['GET']);
             return res.status(405).end(`Methode ${method} nicht erlaubt`);
         }
     } catch (error) {

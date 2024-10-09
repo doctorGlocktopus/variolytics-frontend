@@ -20,10 +20,6 @@ async function delUser(_id) {
             },
         });
 
-        if (!response.ok) {
-            throw new Error('Fehler beim Löschen des Benutzers');
-        }
-
         return await response.json();
     } catch (error) {
         throw error;
